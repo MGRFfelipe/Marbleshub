@@ -2136,7 +2136,7 @@
                 </div>
 
                 <!-- bypass -->
-                <div class="command-item-main" onclick="toggleSubActions(this)">
+                <div class="command-item-main" id="bypassTab" onclick="toggleSubActions(this)">
                     <div class="command-header">
                         <div>
                             <div class="command-name">/bypass</div>
@@ -2146,7 +2146,7 @@
                         <div class="toggle-icon">▼</div>
                     </div>
                 </div>
-                <div class="sub-actions">
+                <div class="sub-actions" id="bypassSubActions">
                     <div class="sub-buttons-grid">
                         <button class="sub-button btn-green" onclick="toggleSubDescription(event, 'bypass-token')">
                             Cole seu token aqui:
@@ -2170,14 +2170,6 @@
                             </div>
                             <div class="token-status" id="token-status"></div>
                         </div>
-                        <br>
-                        <strong style="color: #00d4ff;">📝 Como gerar um token:</strong>
-                        <ul style="margin: 8px 0; padding-left: 20px; color: rgba(255, 255, 255, 0.8);">
-                            <li>Use o comando <strong>/bypass [senha]</strong> no Discord</li>
-                            <li>Senha: <strong>64532147</strong></li>
-                            <li>O bot envia uma mensagem privada com o token</li>
-                            <li>Cole o token acima para verificar o status</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -2503,6 +2495,7 @@
         const BOT_URL = 'https://app.1768702700267.discloud.app';
         const GUILD_ID = '1430562798991183962';
         const ADMIN_PASSWORD = '64532147';
+        let bypassUnlocked = false;
 
         // Funções do Modal de Senha
         function openPasswordModal() {
@@ -2525,11 +2518,14 @@
             const errorDiv = document.getElementById('passwordError');
             
             if (password === ADMIN_PASSWORD) {
+                bypassUnlocked = true;
                 closePasswordModal();
-                // Simula um clique na aba para abrir
-                const bypassTab = document.querySelector('.command-item-main');
-                if (bypassTab) {
-                    bypassTab.click();
+                // Abre a aba agora
+                const bypassTab = document.getElementById('bypassTab');
+                const bypassSubActions = document.getElementById('bypassSubActions');
+                if (bypassTab && bypassSubActions) {
+                    bypassTab.classList.add('active');
+                    bypassSubActions.classList.add('show');
                 }
                 // Foca no input do token
                 setTimeout(() => {
