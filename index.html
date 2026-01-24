@@ -1456,206 +1456,6 @@
             color: #fde68a;
         }
 
-        /* ========== SECRET KEY ICON ========== */
-        .secret-key-icon {
-            position: fixed;
-            bottom: 140px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, rgba(157, 69, 255, 0.3), rgba(0, 212, 255, 0.2));
-            border: 2px solid rgba(0, 212, 255, 0.4);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 28px;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.1);
-            animation: subtleFloat 3s ease-in-out infinite;
-        }
-
-        .secret-key-icon:hover {
-            background: linear-gradient(135deg, rgba(157, 69, 255, 0.5), rgba(0, 212, 255, 0.4));
-            border-color: #00d4ff;
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        @keyframes subtleFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        /* ========== PASSWORD MODAL ========== */
-        .password-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .password-modal.show {
-            display: flex;
-        }
-
-        .password-modal-content {
-            background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.95) 100%);
-            border: 2px solid rgba(0, 212, 255, 0.5);
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 212, 255, 0.3);
-            animation: modalSlideIn 0.3s ease-out;
-            position: relative;
-            z-index: 1001;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 28px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            color: #00d4ff;
-            transform: rotate(90deg);
-        }
-
-        .password-modal-content h3 {
-            color: #00d4ff;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 900;
-        }
-
-        .password-modal-content p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 25px;
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-
-        .password-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .password-input {
-            flex: 1;
-            padding: 14px 16px;
-            border: 2px solid rgba(0, 212, 255, 0.4);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2em;
-            letter-spacing: 4px;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .password-input:focus {
-            outline: none;
-            border-color: #00d4ff;
-            background: rgba(0, 212, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .password-modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .modal-btn-confirm {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            border-color: #27ae60;
-            color: white;
-        }
-
-        .modal-btn-confirm:hover {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
-        }
-
-        .modal-btn-cancel {
-            background: transparent;
-            border-color: rgba(255, 255, 255, 0.3);
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .modal-btn-cancel:hover {
-            border-color: #ef4444;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .password-error {
-            display: none;
-            color: #fca5a5;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .password-error.show {
-            display: block;
-        }
-
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2.2em;
@@ -2159,38 +1959,60 @@
                     </div>
                 </div>
 
-                <!-- bypass (Bloqueado) -->
-                <div class="command-item-main" style="opacity: 0.6; cursor: not-allowed;">
+                <!-- bypass -->
+                <div class="command-item-main" onclick="requestBypassPassword(event, this)">
                     <div class="command-header">
                         <div>
                             <div class="command-name">/bypass</div>
-                            <div class="command-desc">Comando restrito (Apenas proprietário)</div>
-                            <span class="badge bloqueado">Bloqueado</span>
+                            <div class="command-desc">Gerar e verificar tokens de status do bot</div>
+                            <span class="badge owner">Owner</span>
+                            <span class="badge configuracao">Sistema</span>
                         </div>
                         <div class="toggle-icon">▼</div>
                     </div>
                 </div>
+                <div class="sub-actions">
+                    <div class="sub-buttons-grid">
+                        <button class="sub-button btn-purple" onclick="toggleSubDescription(event, 'bypass-info')">
+                            Sobre Tokens
+                        </button>
+                        <button class="sub-button btn-green" onclick="toggleSubDescription(event, 'bypass-como')">
+                            Como Usar
+                        </button>
+                    </div>
+                    
+                    <div class="sub-description" id="bypass-info">
+                        <strong>Sistema de Tokens</strong><br>
+                        Use este sistema para gerar um token seguro no Discord que permite verificar o status do bot no site. Cada novo token invalida o anterior automaticamente.<br><br>
+                        <strong style="color: #00d4ff;">Para gerar um token:</strong>
+                        <ul style="margin: 8px 0; padding-left: 20px;">
+                            <li>Use o comando <strong>/bypass [senha]</strong> no Discord</li>
+                            <li>Senha: <strong>64532147</strong></li>
+                            <li>O bot envia uma mensagem privada com o token</li>
+                            <li>Cole o token no campo abaixo para verificar o status</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-description" id="bypass-como">
+                        <strong>Verificar Status do Bot</strong><br>
+                        Cole o token gerado no Discord para checar em tempo real se o bot está online:<br><br>
+                        <div style="background: rgba(0, 212, 255, 0.1); border: 2px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 20px; margin: 15px 0;">
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
+                                <input 
+                                    type="text" 
+                                    id="token-input" 
+                                    placeholder="Cole seu token aqui..." 
+                                    style="flex: 1; min-width: 200px; padding: 12px 16px; border: 2px solid rgba(0, 212, 255, 0.4); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: white; font-family: 'Courier New', monospace; font-size: 0.9em; transition: all 0.3s ease;"
+                                />
+                                <button class="token-btn" onclick="verifyToken()" style="padding: 12px 24px; white-space: nowrap;">
+                                    🔗 Verificar
+                                </button>
+                            </div>
+                            <div class="token-status" id="token-status"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <!-- TOKEN VERIFICATION SECTION (HIDDEN) -->
-        <div class="token-verification-section" id="token-section" style="display: none;">
-            <h2>Verificar Status do Bot com Token</h2>
-            <p style="color: rgba(255, 255, 255, 0.85); margin-bottom: 25px; font-size: 1em;">
-                Cole seu token gerado no Discord para verificar o status do bot em tempo real.
-            </p>
-            <div class="token-input-group">
-                <input 
-                    type="text" 
-                    id="token-input" 
-                    placeholder="Cole seu token aqui..." 
-                    style="flex: 1; min-width: 250px;"
-                />
-                <button class="token-btn" onclick="verifyToken()">
-                    🔗 Conectar
-                </button>
-            </div>
-            <div class="token-status" id="token-status"></div>
         </div>
 
         <div class="command-section">
@@ -2219,42 +2041,6 @@
     <a href="https://discord.com/oauth2/authorize?client_id=1433165665912623155&permissions=8&integration_type=0&scope=bot" target="_blank" rel="noopener noreferrer" class="mascot-container" title="Clique para adicionar MarblesHub ao seu servidor!">
         <img src="https://i.imgur.com/9XfZ3QK.png" alt="MarblesHub Mascote" class="mascot">
     </a>
-
-    <!-- SECRET KEY ICON -->
-    <div class="secret-key-icon" onclick="openPasswordModal()" title="Acesso administrativo">🔐</div>
-
-    <!-- PASSWORD MODAL -->
-    <div class="password-modal" id="passwordModal">
-        <div class="password-modal-content">
-            <button class="modal-close" onclick="closePasswordModal()">&times;</button>
-            <h3>🔐 Acesso Restrito</h3>
-            <p>Digite a senha para acessar o sistema de tokens de verificação do bot.</p>
-            
-            <div class="password-error" id="passwordError">
-                ❌ Senha incorreta. Tente novamente.
-            </div>
-            
-            <div class="password-input-group">
-                <input 
-                    type="password" 
-                    id="passwordInput" 
-                    class="password-input"
-                    placeholder="••••••••"
-                    onkeypress="if(event.key==='Enter') verifyPassword()"
-                    autocomplete="off"
-                />
-            </div>
-            
-            <div class="password-modal-buttons">
-                <button class="modal-btn modal-btn-confirm" onclick="verifyPassword()">
-                    ✓ Confirmar
-                </button>
-                <button class="modal-btn modal-btn-cancel" onclick="closePasswordModal()">
-                    ✗ Cancelar
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script>
         function toggleSubActions(element) {
@@ -2516,55 +2302,34 @@
         const BOT_URL = 'https://app.1768702700267.discloud.app';
         const GUILD_ID = '1430562798991183962';
         const ADMIN_PASSWORD = '64532147';
+        let bypassUnlocked = false;
 
-        // Funções do Modal de Senha
-        function openPasswordModal() {
-            const modal = document.getElementById('passwordModal');
-            modal.classList.add('show');
-            document.getElementById('passwordInput').focus();
-            document.getElementById('passwordError').classList.remove('show');
-            document.getElementById('passwordInput').value = '';
-        }
-
-        function closePasswordModal() {
-            const modal = document.getElementById('passwordModal');
-            modal.classList.remove('show');
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordError').classList.remove('show');
-        }
-
-        function verifyPassword() {
-            const password = document.getElementById('passwordInput').value;
-            const errorDiv = document.getElementById('passwordError');
+        function requestBypassPassword(event, element) {
+            event.preventDefault();
+            
+            // Se já foi desbloqueado nesta sessão, só toggle
+            if (bypassUnlocked) {
+                toggleSubActions(element);
+                return;
+            }
+            
+            // Pedir senha
+            const password = prompt('🔐 Digite a senha para acessar /bypass:');
+            
+            if (password === null) {
+                // Usuário cancelou
+                return;
+            }
             
             if (password === ADMIN_PASSWORD) {
-                closePasswordModal();
-                // Mostra a seção de tokens
-                document.getElementById('token-section').style.display = 'block';
-                // Scroll para a seção
-                document.getElementById('token-section').scrollIntoView({ behavior: 'smooth' });
-                // Foca no input do token
-                setTimeout(() => {
-                    document.getElementById('token-input').focus();
-                }, 500);
+                bypassUnlocked = true;
+                // Remove o event listener anterior e ativa o toggle normal
+                toggleSubActions(element);
             } else {
-                errorDiv.classList.add('show');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
+                alert('❌ Senha incorreta!');
             }
         }
 
-        // Fechar modal ao clicar fora
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('passwordModal');
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closePasswordModal();
-                }
-            });
-        });
-
-        // Função para verificar token
         async function verifyToken() {
             const tokenInput = document.getElementById('token-input');
             const statusDiv = document.getElementById('token-status');
