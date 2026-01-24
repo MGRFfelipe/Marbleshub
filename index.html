@@ -332,21 +332,13 @@
         }
 
         header h1::before {
-            content: '●';
-            display: inline-block;
-            margin-right: 25px;
-            animation: pulse-dot 2s ease-in-out infinite;
-            font-size: 0.5em;
-            filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+            content: '';
+            display: none;
         }
 
         header h1::after {
-            content: '●';
-            display: inline-block;
-            margin-left: 25px;
-            animation: pulse-dot-reverse 2s ease-in-out infinite;
-            font-size: 0.5em;
-            filter: drop-shadow(0 0 8px rgba(157, 69, 255, 0.5));
+            content: '';
+            display: none;
         }
 
         @keyframes pulse-dot {
