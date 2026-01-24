@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -1333,6 +1333,129 @@
             margin-bottom: 12px;
         }
 
+        /* ========== TOKEN VERIFICATION STYLES ========== */
+        .token-verification-section {
+            background: linear-gradient(135deg, rgba(157, 69, 255, 0.15) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(157, 69, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .token-verification-section h2 {
+            color: #00d4ff;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            font-weight: 900;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .token-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .token-input-group input {
+            flex: 1;
+            min-width: 250px;
+            padding: 14px 20px;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .token-input-group input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .token-input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .token-btn {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #00d4ff, #9945ff);
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            color: white;
+            font-weight: 800;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .token-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .token-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+        }
+
+        .token-btn:active {
+            transform: translateY(0);
+        }
+
+        .token-status {
+            padding: 16px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #9945ff;
+            background: linear-gradient(135deg, rgba(157, 69, 255, 0.2) 0%, rgba(0, 212, 255, 0.15) 100%);
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.4s ease-out;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .token-status.show {
+            display: block;
+        }
+
+        .token-status.error {
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+            color: #fca5a5;
+        }
+
+        .token-status.success {
+            border-left-color: #2ecc71;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(52, 211, 153, 0.1) 100%);
+            color: #a7f3d0;
+        }
+
+        .token-status.warning {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
+            color: #fde68a;
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2.2em;
@@ -1850,6 +1973,27 @@
             </div>
         </div>
 
+        <!-- TOKEN VERIFICATION SECTION -->
+        <div class="token-verification-section">
+            <h2>Verificar Status do Bot com Token</h2>
+            <p style="color: rgba(255, 255, 255, 0.85); margin-bottom: 25px; font-size: 1em;">
+                Use o sistema de tokens para verificar se o bot está online. 
+                Gere um token no Discord usando o comando <strong>/bypass</strong> (apenas para o proprietário).
+            </p>
+            <div class="token-input-group">
+                <input 
+                    type="text" 
+                    id="token-input" 
+                    placeholder="Cole seu token aqui..." 
+                    style="flex: 1; min-width: 250px;"
+                />
+                <button class="token-btn" onclick="verifyToken()">
+                    🔗 Conectar
+                </button>
+            </div>
+            <div class="token-status" id="token-status"></div>
+        </div>
+
         <div class="command-section">
             <h2>Como Usar</h2>
 
@@ -2126,6 +2270,73 @@
                 statusLabel.textContent = 'Online';
                 indicator.classList.add('online');
                 indicator.classList.remove('offline', 'verificando');
+            }
+        });
+
+        // ========== TOKEN VERIFICATION SYSTEM ==========
+        const BOT_URL = 'https://app.1768702700267.discloud.app';
+        const GUILD_ID = '1430562798991183962';
+
+        async function verifyToken() {
+            const tokenInput = document.getElementById('token-input');
+            const statusDiv = document.getElementById('token-status');
+            const token = tokenInput.value.trim();
+
+            if (!token) {
+                showTokenStatus('❌ Por favor, insira um token', 'error');
+                return;
+            }
+
+            showTokenStatus('⏳ Verificando token...', 'warning');
+
+            try {
+                const response = await fetch(
+                    `${BOT_URL}/api/token-check?token=${encodeURIComponent(token)}&guild_id=${GUILD_ID}`
+                );
+                const data = await response.json();
+
+                if (response.ok && data.valid) {
+                    if (data.online) {
+                        showTokenStatus(
+                            `✅ Bot online | Latência: ${data.latency}ms | ${data.bot_name}`,
+                            'success'
+                        );
+                    } else {
+                        showTokenStatus(
+                            `⚠️ Token válido, mas bot está offline | ${data.bot_name}`,
+                            'warning'
+                        );
+                    }
+                } else {
+                    showTokenStatus(
+                        `❌ Token inválido ou expirado. Erro: ${data.error || 'Desconhecido'}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                console.error('Erro ao verificar token:', error);
+                showTokenStatus(
+                    `❌ Erro ao conectar com o bot: ${error.message}`,
+                    'error'
+                );
+            }
+        }
+
+        function showTokenStatus(message, type) {
+            const statusDiv = document.getElementById('token-status');
+            statusDiv.textContent = message;
+            statusDiv.className = `token-status show ${type}`;
+        }
+
+        // Permite Enter para verificar
+        document.addEventListener('DOMContentLoaded', () => {
+            const tokenInput = document.getElementById('token-input');
+            if (tokenInput) {
+                tokenInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        verifyToken();
+                    }
+                });
             }
         });
     </script>
