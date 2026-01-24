@@ -2136,7 +2136,7 @@
                 </div>
 
                 <!-- bypass -->
-                <div class="command-item-main" id="bypassTab" onclick="toggleSubActions(this)">
+                <div class="command-item-main" id="bypassTab" style="opacity: 0.6; cursor: not-allowed;" onclick="if(bypassUnlocked) toggleSubActions(this)">
                     <div class="command-header">
                         <div>
                             <div class="command-name">/bypass</div>
@@ -2520,8 +2520,13 @@
             if (password === ADMIN_PASSWORD) {
                 bypassUnlocked = true;
                 closePasswordModal();
-                // Abre a aba agora
+                
+                // Remove o estilo bloqueado
                 const bypassTab = document.getElementById('bypassTab');
+                bypassTab.style.opacity = '1';
+                bypassTab.style.cursor = 'pointer';
+                
+                // Abre a aba
                 const bypassSubActions = document.getElementById('bypassSubActions');
                 if (bypassTab && bypassSubActions) {
                     bypassTab.classList.add('active');
