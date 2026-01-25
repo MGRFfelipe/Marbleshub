@@ -531,12 +531,6 @@
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
         }
-            }
-            50% { 
-                box-shadow: 0 0 35px #2ecc71, 0 0 50px rgba(46, 204, 113, 0.6), inset 0 0 5px rgba(46, 204, 113, 0.8);
-                transform: scale(1.3);
-            }
-        }
 
         @keyframes innerGlow {
             0%, 100% { 
@@ -2144,13 +2138,13 @@
                 <div class="sub-actions" id="bypassSubActions">
                     <div class="sub-buttons-grid">
                         <button class="sub-button btn-green" onclick="toggleSubDescription(event, 'bypass-token')">
-                            Gerar Token
+                            Cole seu token aqui:
                         </button>
                     </div>
                     
                     <div class="sub-description" id="bypass-token">
                         <strong>Gerar Token de Controle</strong><br>
-                        Clique no botão abaixo para GERAR um novo token. Este token permite que você tenha controle total do bot. Após gerar, copie o token e cole no comando /bypass do bot no Discord.<br><br>
+                        Clique no botão abaixo para gerar um novo token. Este token permite que você tenha controle total do bot. Após gerar, copie e cole no comando <code>/bypass token: [seu_token]</code> no Discord.<br><br>
                         <div style="background: rgba(0, 212, 255, 0.1); border: 2px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 20px; margin: 15px 0;">
                             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
                                 <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
@@ -2177,8 +2171,18 @@
                                     </button>
                                 </div>
                             </div>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <input 
+                                    type="text" 
+                                    id="token-input" 
+                                    placeholder="Cole seu token aqui para sincronizar..." 
+                                    style="flex: 1; min-width: 200px; padding: 12px 16px; border: 2px solid rgba(0, 212, 255, 0.4); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: white; font-family: 'Courier New', monospace; font-size: 0.9em; transition: all 0.3s ease;"
+                                />
+                                <button class="token-btn" onclick="verifyToken()" style="padding: 12px 24px; white-space: nowrap;">
+                                    Sincronizar
+                                </button>
+                            </div>
                             <div class="token-status" id="token-status"></div>
-                            <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 10px;">Use o comando no Discord: /bypass token: [cole_o_token_aqui]</small>
                         </div>
                     </div>
                 </div>
@@ -2508,13 +2512,97 @@
             }
         });
 
-        // ========== TOKEN GENERATION SYSTEM ==========
+        // ========== TOKEN VERIFICATION SYSTEM ==========
         const BOT_URL = 'https://app.1768702700267.discloud.app';
         const GUILD_ID = '1430562798991183962';
         const ADMIN_PASSWORD = '15745751';
-        const ADMIN_KEY = 'mude-esta-chave-para-algo-seguro-minimo-32-caracteres';
         let bypassUnlocked = false;
-        let generatedToken = null;
+        let generatedToken = '';
+        
+        // Variáveis de configuração
+        const SITE_ADMIN_KEY = 'mude-esta-chave-para-algo-seguro-minimo-32-caracteres'; // Deve ser a mesma do .env
+
+        // Gerar Token Localmente
+        async function generateBotToken() {
+            const generateBtn = event.target;
+            generateBtn.disabled = true;
+            const originalText = generateBtn.textContent;
+            generateBtn.textContent = 'Gerando...';
+            
+            showTokenStatus('Gerando token do servidor...', 'warning');
+            
+            try {
+                // Chamar endpoint para gerar token
+                const response = await fetch(`${BOT_URL}/api/generate-token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Site-Key': SITE_ADMIN_KEY
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    generatedToken = data.token;
+                    
+                    // Salvar no localStorage
+                    localStorage.setItem('bot_token', generatedToken);
+                    
+                    // Exibir token
+                    document.getElementById('token-value').value = generatedToken;
+                    document.getElementById('token-display-area').style.display = 'block';
+                    document.getElementById('view-token-btn').style.display = 'inline-block';
+                    document.getElementById('copy-token-btn').style.display = 'inline-block';
+                    
+                    // Token começa mascarado
+                    document.getElementById('token-value').type = 'password';
+                    
+                    showTokenStatus('✅ Token gerado com sucesso no servidor! Cole abaixo para sincronizar com o bot.', 'success');
+                } else {
+                    showTokenStatus(`❌ Erro: ${data.message || 'Falha ao gerar token'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao gerar token:', error);
+                showTokenStatus(`❌ Erro ao conectar com servidor: ${error.message}`, 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = originalText;
+            }
+        }
+
+        // Mostrar campo do token
+        function showTokenField() {
+            const tokenDisplayArea = document.getElementById('token-display-area');
+            if (tokenDisplayArea.style.display === 'none') {
+                tokenDisplayArea.style.display = 'block';
+            }
+        }
+
+        // Mascarar/desmascarar token
+        function toggleTokenMask() {
+            const tokenInput = document.getElementById('token-value');
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';   // Desmascarar
+            } else {
+                tokenInput.type = 'password';  // Mascarar
+            }
+        }
+
+        // Copiar Token para Clipboard
+        function copyTokenToClipboard() {
+            navigator.clipboard.writeText(generatedToken).then(() => {
+                showTokenStatus('Token copiado para a área de transferência!', 'success');
+                const btn = document.getElementById('copy-token-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copiado!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(() => {
+                showTokenStatus('Erro ao copiar token', 'error');
+            });
+        }
 
         // Funções do Modal de Senha
         function openPasswordModal() {
@@ -2572,68 +2660,54 @@
             });
         });
 
-        // Função para gerar token LOCALMENTE (sem chamar API)
-        function generateBotToken() {
-            // Gera um token aleatório no navegador
-            const randomToken = 'token_' + Math.random().toString(36).substring(2, 15) + 
-                               Math.random().toString(36).substring(2, 15);
-            
-            generatedToken = randomToken;
-            document.getElementById('token-value').value = randomToken;
-            document.getElementById('token-display-area').style.display = 'block';
-            document.getElementById('view-token-btn').style.display = 'inline-block';
-            document.getElementById('copy-token-btn').style.display = 'inline-block';
-            
-            // Token fica MASCARADO por padrão (type="password")
-            document.getElementById('token-value').type = 'password';
-            
-            // Salva em localStorage para persistência
-            localStorage.setItem('bot_token', randomToken);
-            
-            showTokenStatus(
-                'Token gerado com sucesso! Clique no olho para visualizar ou Copiar para colar no Discord',
-                'success'
-            );
-        }
+        // Função para verificar token e sincronizar com o bot
+        async function verifyToken() {
+            const tokenInput = document.getElementById('token-input');
+            const statusDiv = document.getElementById('token-status');
+            const token = tokenInput.value.trim();
 
-        // Função para mostrar o campo do token
-        function showTokenField() {
-            const tokenDisplayArea = document.getElementById('token-display-area');
-            if (tokenDisplayArea.style.display === 'none') {
-                tokenDisplayArea.style.display = 'block';
-            }
-        }
-
-        // Função para mascarar/desmascarar token
-        function toggleTokenMask() {
-            const tokenInput = document.getElementById('token-value');
-            if (tokenInput.type === 'password') {
-                tokenInput.type = 'text';  // Desmascarar
-            } else {
-                tokenInput.type = 'password';  // Mascarar
-            }
-        }
-
-        // Função para copiar token
-        function copyTokenToClipboard() {
-            if (!generatedToken) {
-                showTokenStatus('Nenhum token gerado', 'error');
+            if (!token) {
+                showTokenStatus('Por favor, insira um token', 'error');
                 return;
             }
-            
-            navigator.clipboard.writeText(generatedToken).then(() => {
-                showTokenStatus('Token copiado para a area de transferencia!', 'success');
+
+            showTokenStatus('Verificando token e status do bot...', 'warning');
+
+            try {
+                // Chamar endpoint de verificação de token
+                const response = await fetch(`${BOT_URL}/api/verify-token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: token })
+                });
                 
-                // Mudar texto do botão por 2 segundos
-                const btn = document.getElementById('copy-token-btn');
-                const originalText = btn.textContent;
-                btn.textContent = 'Copiado!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            }).catch(() => {
-                showTokenStatus('Erro ao copiar token', 'error');
-            });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showTokenStatus(
+                        `✅ Token Validado | Bot: ${data.online ? '🟢 Online' : '🔴 Offline'} | Latência: ${data.latency}ms`,
+                        'success'
+                    );
+                } else if (response.status === 401) {
+                    showTokenStatus(
+                        `❌ Token inválido ou expirado. Gere um novo token.`,
+                        'error'
+                    );
+                } else {
+                    showTokenStatus(
+                        `⚠️ Status do Bot: ${data.online ? '🟢 Online' : '🔴 Offline'} | ${data.message || 'Desconhecido'}`,
+                        'warning'
+                    );
+                }
+            } catch (error) {
+                console.error('Erro ao verificar token:', error);
+                showTokenStatus(
+                    `❌ Erro ao conectar com o bot: ${error.message}`,
+                    'error'
+                );
+            }
         }
 
         function showTokenStatus(message, type) {
@@ -2654,6 +2728,25 @@
                 document.getElementById('copy-token-btn').style.display = 'inline-block';
                 // Token começa mascarado
                 document.getElementById('token-value').type = 'password';
+            }
+            
+            const tokenInput = document.getElementById('token-input');
+            if (tokenInput) {
+                tokenInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        verifyToken();
+                    }
+                });
+                
+                // Auto-sincronizar quando um token for colado
+                tokenInput.addEventListener('paste', (e) => {
+                    setTimeout(() => {
+                        if (tokenInput.value.trim().length > 10) {
+                            showTokenStatus('Token detectado! Sincronizando...', 'warning');
+                            setTimeout(() => verifyToken(), 500);
+                        }
+                    }, 100);
+                });
             }
         });
     </script>
