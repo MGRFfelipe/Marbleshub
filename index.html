@@ -2524,20 +2524,33 @@
         // Inicia autoplay para how-works
         startHowWorksAutoplay();
 
-        // ========== VERIFICAR STATUS DO BOT (COM HEARTBEAT) ==========
+        // ========== VERIFICAR STATUS DO BOT (COM HEARTBEAT E TOKEN) ==========
         /**
          * Sistema de verificação de status do bot via heartbeat
-         * O bot envia heartbeat a cada 20 segundos
-         * O site verifica o status a cada 5 segundos
+         * O bot envia heartbeat a cada 20 segundos usando o token do usuário
+         * O site verifica o status a cada 5 segundos usando seu token
          */
         async function checkBotStatus() {
             try {
+                // Pega o token do usuário do localStorage
+                const userToken = localStorage.getItem('generatedToken');
+                
                 // Detecta URL da API (funciona em dev e produção)
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                     ? 'http://localhost:5000'
                     : window.location.origin;
                 
-                const response = await fetch(`${apiUrl}/api/bot/status`);
+                // Se tem token, usa para verificar status específico
+                let statusUrl;
+                if (userToken) {
+                    statusUrl = `${apiUrl}/api/bot/status?token=${encodeURIComponent(userToken)}`;
+                    console.log(`[Status] Verificando com token do usuário...`);
+                } else {
+                    statusUrl = `${apiUrl}/api/bot/status`;
+                    console.log(`[Status] Verificando status global (sem token)...`);
+                }
+                
+                const response = await fetch(statusUrl);
                 
                 if (!response.ok) {
                     throw new Error(`Status ${response.status}`);
@@ -2560,7 +2573,7 @@
                         indicator.classList.remove('online', 'verificando');
                     }
                     
-                    console.log(`[Status] Bot: ${data.online ? 'Online' : 'Offline'} | Latência: ${data.latency}ms`);
+                    console.log(`[Status] Bot: ${data.online ? 'Online' : 'Offline'} | Latência: ${data.latency}ms | ${data.message}`);
                 }
             } catch (error) {
                 console.warn(`[Status] Erro ao verificar status do bot:`, error);
