@@ -2779,18 +2779,60 @@
         
         // Função para consultar status do token
         async function checkFirebaseStatus() {
-            const hasToken = localStorage.getItem('bot_token') !== null;
-            const isConfirmed = localStorage.getItem('token_confirmed') === 'true';
+            const userToken = localStorage.getItem('generatedToken');
             
-            if (!hasToken) {
+            if (!userToken) {
                 showTokenStatus('Nenhum token gerado. Clique em "Gerar Token Novo" para começar.', 'warning');
                 return;
             }
             
-            if (isConfirmed) {
-                showTokenStatus('Status: Token Sincronizado e Confirmado com Sucesso. Você tem controle total do bot.', 'success');
-            } else {
-                showTokenStatus('Status: Token gerado. Próximo passo: Copie e cole no Discord com /bypass codigo: 64532147 e clique em "Já Colei o Token no Discord, Confirmar".', 'info');
+            try {
+                // Detecta URL da API
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:5000'
+                    : window.location.origin;
+                
+                // Verifica status do bot com o token do usuário
+                const response = await fetch(`${apiUrl}/api/bot/status?token=${encodeURIComponent(userToken)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Status ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Se o bot está online e recebeu heartbeat com esse token
+                if (data.online) {
+                    showTokenStatus(
+                        '✅ Sincronizado - Token conectado ao bot e recebendo heartbeat!',
+                        'success'
+                    );
+                    
+                    // Atualizar indicador de sincronização
+                    const syncContainer = document.getElementById('sync-status-container');
+                    const syncIndicator = document.getElementById('sync-indicator');
+                    const syncText = document.getElementById('sync-text');
+                    const syncDetails = document.getElementById('sync-details');
+                    
+                    if (syncContainer) {
+                        syncContainer.style.display = 'block';
+                        syncIndicator.style.background = '#2ecc71';
+                        syncText.textContent = 'Sincronizado com Sucesso';
+                        syncText.style.color = '#2ecc71';
+                        syncDetails.innerHTML = `<strong>Status:</strong> Bot online (${data.latency}ms) - Token sincronizado!`;
+                    }
+                } else {
+                    showTokenStatus(
+                        '⏳ Aguardando Sincronização - Token gerado, mas ainda não recebeu heartbeat do bot. Certifique-se que o bot está online e que você colou o token no Discord.',
+                        'warning'
+                    );
+                }
+            } catch (error) {
+                console.error('[Token Status]', error);
+                showTokenStatus(
+                    '❌ Erro ao verificar status - Tente novamente mais tarde.',
+                    'error'
+                );
             }
         }
 
