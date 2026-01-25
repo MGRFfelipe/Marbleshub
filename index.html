@@ -1673,62 +1673,6 @@
                 margin-left: 10px;
             }
         }
-
-        /* Bot Status Indicator */
-        #bot-status-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        #status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #95a5a6;
-            transition: all 0.3s ease;
-        }
-
-        #status-dot.online {
-            background: #2ecc71;
-            box-shadow: 0 0 10px #2ecc71, 0 0 20px rgba(46, 204, 113, 0.5);
-            animation: statusPulseGreen 2s infinite;
-        }
-
-        #status-dot.offline {
-            background: #e74c3c;
-            box-shadow: 0 0 10px #e74c3c;
-        }
-
-        #status-dot.checking {
-            background: #f39c12;
-            animation: statusPulseYellow 1s infinite;
-        }
-
-        @keyframes statusPulseGreen {
-            0%, 100% { box-shadow: 0 0 10px #2ecc71; }
-            50% { box-shadow: 0 0 20px #2ecc71, 0 0 30px rgba(46, 204, 113, 0.6); }
-        }
-
-        @keyframes statusPulseYellow {
-            0%, 100% { box-shadow: 0 0 10px #f39c12; }
-            50% { box-shadow: 0 0 15px #f39c12; }
-        }
-
-        #status-text-label {
-            color: white;
-            font-size: 0.85em;
-            font-weight: 500;
-        }
     </style>
 </head>
 <body>
@@ -1762,10 +1706,6 @@
 
     <div class="container">
         <header>
-            <div id="bot-status-indicator">
-                <div id="status-dot" class="checking"></div>
-                <span id="status-text-label">Verificando...</span>
-            </div>
             <div class="floating-particle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
             <div class="floating-particle" style="top: 35%; right: 20%; animation-delay: 3s;"></div>
             <div class="floating-particle" style="top: 50%; left: 18%; animation-delay: 6s;"></div>
@@ -2864,53 +2804,10 @@
         // Registra token com o bot para receber atualizações em tempo real
         
         // ========== END FILE ==========
-        
-        // ========== BOT STATUS CHECK ==========
-        async function checkBotStatus() {
-            const statusDot = document.getElementById('status-dot');
-            const statusText = document.getElementById('status-text-label');
-            
-            if (!statusDot || !statusText) return;
-            
-            statusDot.className = 'checking';
-            statusText.textContent = 'Verificando...';
-            
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-                
-                const response = await fetch(BOT_URL + '/status', {
-                    method: 'GET',
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.status === 'online' || data.online === true) {
-                        statusDot.className = 'online';
-                        statusText.textContent = 'Online';
-                    } else {
-                        statusDot.className = 'offline';
-                        statusText.textContent = 'Offline';
-                    }
-                } else {
-                    statusDot.className = 'offline';
-                    statusText.textContent = 'Offline';
-                }
-            } catch (error) {
-                statusDot.className = 'offline';
-                statusText.textContent = 'Offline';
-            }
-        }
-        
-        // Verificar status ao carregar e a cada 30 segundos
-        checkBotStatus();
-        setInterval(checkBotStatus, 30000);
     </script>
 </body>
 </html>
+
 
 
 
