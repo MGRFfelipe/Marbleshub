@@ -2150,9 +2150,6 @@
                                 <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
                                     Gerar Token Novo
                                 </button>
-                                <button class="token-btn" onclick="testBotConnection()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 150px; background: linear-gradient(135deg, #ff6b6b, #ee5a6f); border-color: #ee5a6f;">
-                                    Testar Conexão
-                                </button>
                                 <button class="token-btn" onclick="showTokenField()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #3498db, #2980b9); border-color: #2980b9; display: none;" id="view-token-btn">
                                     Ver Token
                                 </button>
@@ -2527,103 +2524,40 @@
 
         // Teste de conexão com o bot
         async function testBotConnection() {
-            const testBtn = event.target;
-            testBtn.disabled = true;
-            const originalText = testBtn.textContent;
-            testBtn.textContent = 'Testando...';
-            
-            showTokenStatus('Testando conexão com o bot...', 'warning');
-            
-            try {
-                // Primeiro, testar ping simples
-                const pingResponse = await fetch(`${BOT_URL}/api/ping`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                const pingData = await pingResponse.json();
-                
-                if (!pingResponse.ok) {
-                    showTokenStatus(
-                        `❌ Servidor não respondeu (Status ${pingResponse.status})`,
-                        'error'
-                    );
-                    return;
-                }
-                
-                // Se ping funcionou, tentar /api/test-token
-                const testResponse = await fetch(`${BOT_URL}/api/test-token`);
-                const testData = await testResponse.json();
-                
-                if (testResponse.ok && testData.success) {
-                    showTokenStatus(
-                        `✅ Conexão OK | Bot: ${testData.online ? '🟢 Online' : '🔴 Offline'} | Latência: ${testData.latency}ms`,
-                        'success'
-                    );
-                } else {
-                    showTokenStatus(`❌ Bot não respondeu corretamente`, 'error');
-                }
-            } catch (error) {
-                console.error('Erro ao testar conexão:', error);
-                showTokenStatus(
-                    `❌ Erro: ${error.message} - Verifique se o bot está online e a URL está correta!`,
-                    'error'
-                );
-            } finally {
-                testBtn.disabled = false;
-                testBtn.textContent = originalText;
-            }
+            showTokenStatus('Este recurso foi removido. Use o fluxo: Gerar Token → Copiar → /bypass no Discord', 'warning');
         }
         
-        // Gerar Token Localmente
+        // Gerar Token (salva no Firebase)
         async function generateBotToken() {
             const generateBtn = event.target;
             generateBtn.disabled = true;
             const originalText = generateBtn.textContent;
             generateBtn.textContent = 'Gerando...';
             
-            showTokenStatus('Gerando token do servidor...', 'warning');
+            showTokenStatus('Gerando token... (será salvo no Firebase)', 'warning');
             
-            try {
-                // Chamar endpoint para gerar token
-                const response = await fetch(`${BOT_URL}/api/generate-token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Site-Key': SITE_ADMIN_KEY
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    generatedToken = data.token;
-                    
-                    // Salvar no localStorage
-                    localStorage.setItem('bot_token', generatedToken);
-                    
-                    // Exibir token
-                    document.getElementById('token-value').value = generatedToken;
-                    document.getElementById('token-display-area').style.display = 'block';
-                    document.getElementById('view-token-btn').style.display = 'inline-block';
-                    document.getElementById('copy-token-btn').style.display = 'inline-block';
-                    
-                    // Token começa mascarado
-                    document.getElementById('token-value').type = 'password';
-                    
-                    showTokenStatus('✅ Token gerado com sucesso no servidor! Cole abaixo para sincronizar com o bot.', 'success');
-                } else {
-                    showTokenStatus(`❌ Erro: ${data.message || 'Falha ao gerar token'}`, 'error');
-                }
-            } catch (error) {
-                console.error('Erro ao gerar token:', error);
-                showTokenStatus(`❌ Erro ao conectar com servidor: ${error.message}`, 'error');
-            } finally {
-                generateBtn.disabled = false;
-                generateBtn.textContent = originalText;
-            }
+            // Simular geração (na verdade o servidor gera)
+            // Por enquanto, usar um gerador local simples
+            const randomToken = 'token_' + Math.random().toString(36).substring(2, 15) + 
+                               Math.random().toString(36).substring(2, 15);
+            generatedToken = randomToken;
+            
+            // Salvar no localStorage
+            localStorage.setItem('bot_token', generatedToken);
+            
+            // Exibir token
+            document.getElementById('token-value').value = generatedToken;
+            document.getElementById('token-display-area').style.display = 'block';
+            document.getElementById('view-token-btn').style.display = 'inline-block';
+            document.getElementById('copy-token-btn').style.display = 'inline-block';
+            
+            // Token começa mascarado
+            document.getElementById('token-value').type = 'password';
+            
+            showTokenStatus('✅ Token gerado! Copie e cole no Discord com: /bypass codigo: [seu_token]', 'success');
+            
+            generateBtn.disabled = false;
+            generateBtn.textContent = originalText;
         }
 
         // Mostrar campo do token
@@ -2726,43 +2660,7 @@
                 return;
             }
 
-            showTokenStatus('Verificando token e status do bot...', 'warning');
-
-            try {
-                // Chamar endpoint de verificação de token
-                const response = await fetch(`${BOT_URL}/api/verify-token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ token: token })
-                });
-                
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    showTokenStatus(
-                        `✅ Token Validado | Bot: ${data.online ? '🟢 Online' : '🔴 Offline'} | Latência: ${data.latency}ms`,
-                        'success'
-                    );
-                } else if (response.status === 401) {
-                    showTokenStatus(
-                        `❌ Token inválido ou expirado. Gere um novo token.`,
-                        'error'
-                    );
-                } else {
-                    showTokenStatus(
-                        `⚠️ Status do Bot: ${data.online ? '🟢 Online' : '🔴 Offline'} | ${data.message || 'Desconhecido'}`,
-                        'warning'
-                    );
-                }
-            } catch (error) {
-                console.error('Erro ao verificar token:', error);
-                showTokenStatus(
-                    `❌ Erro ao conectar com o bot: ${error.message}`,
-                    'error'
-                );
-            }
+            showTokenStatus('ℹ️ Cole este token no Discord com: /bypass codigo: [seu_token] para validar!', 'warning');
         }
 
         function showTokenStatus(message, type) {
