@@ -2190,7 +2190,7 @@
                             </div>
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                                 <button class="token-btn" onclick="checkFirebaseStatus()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-color: #8e44ad; flex: 1; min-width: 200px;">
-                                    Ver Status do Bot no Firebase
+                                    Ver Status do Token
                                 </button>
                             </div>
                             <div class="token-status" id="token-status"></div>
@@ -2199,13 +2199,13 @@
                             <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(124, 58, 231, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none;" id="sync-status-container">
                                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                                     <div id="sync-indicator" style="width: 12px; height: 12px; border-radius: 50%; background: #ffc107; animation: pulse 2s infinite;"></div>
-                                    <span id="sync-text" style="color: #ffc107; font-weight: 600;">Aguardando Sincronização no Discord...</span>
+                                    <span id="sync-text" style="color: #ffc107; font-weight: 600;">Aguardando Sincronização no Discord</span>
                                 </div>
                                 <small id="sync-details" style="color: rgba(255, 255, 255, 0.6); display: block; margin-bottom: 10px;">
                                     Você colou o token no Discord? Clique no botão abaixo para confirmar que foi sincronizado com sucesso!
                                 </small>
                                 <button id="confirm-sync-btn" onclick="confirmSynchronization()" style="width: 100%; padding: 10px 16px; background: linear-gradient(135deg, #2ecc71, #27ae60); border: 2px solid #27ae60; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; font-size: 0.95em;">
-                                    ✅ Confirmar Sincronização
+                                    Confirmar Sincronização
                                 </button>
                             </div>
                         </div>
@@ -2579,7 +2579,7 @@
             // Token começa mascarado
             document.getElementById('token-value').type = 'password';
             
-            showTokenStatus('✅ Token gerado! Copie e cole no Discord com: /bypass codigo: [seu_token]', 'success');
+            showTokenStatus('Token gerado! Copie e cole no Discord com: /bypass codigo: [seu_token]', 'success');
             
             // Mostrar o status de sincronização
             document.getElementById('sync-status-container').style.display = 'block';
@@ -2599,21 +2599,24 @@
             const syncDetails = document.getElementById('sync-details');
             const confirmBtn = document.getElementById('confirm-sync-btn');
             
+            // Salvar status de sincronização no localStorage
+            localStorage.setItem('token_synchronized', 'true');
+            
             // Mudar para status sucesso
             syncIndicator.style.background = '#2ecc71';
             syncIndicator.style.animation = 'none';
-            syncText.textContent = '✅ Token Sincronizado com Sucesso!';
+            syncText.textContent = 'Token Sincronizado com Sucesso';
             syncText.style.color = '#2ecc71';
             
-            syncDetails.innerHTML = `<strong>Parabéns!</strong> Seu token foi validado pelo bot. Agora você tem controle total. 🎉`;
+            syncDetails.innerHTML = `<strong>Perfeito!</strong> Seu token foi validado pelo bot. Agora você tem controle total.`;
             syncDetails.style.color = '#2ecc71';
             
-            confirmBtn.textContent = '✅ Sincronizado';
+            confirmBtn.textContent = 'Sincronizado';
             confirmBtn.disabled = true;
             confirmBtn.style.opacity = '0.7';
             confirmBtn.style.cursor = 'not-allowed';
             
-            showTokenStatus('🎉 Excelente! Seu token foi sincronizado com sucesso no Discord!', 'success');
+            showTokenStatus('Excelente! Seu token foi sincronizado com sucesso no Discord!', 'success');
         }
 
         // Mostrar campo do token
@@ -2712,10 +2715,19 @@
         
         // Função para consultar status do bot no Firebase
         async function checkFirebaseStatus() {
-            showTokenStatus(
-                '📊 Status do Bot: Verifique em tempo real gerando um token e colando no Discord com /bypass. O bot retornará seu status (Online/Offline, Latência).',
-                'info'
-            );
+            const isSynchronized = localStorage.getItem('token_synchronized') === 'true';
+            const hasToken = localStorage.getItem('bot_token') !== null;
+            
+            if (!hasToken) {
+                showTokenStatus('Nenhum token gerado. Por favor, gere um token primeiro.', 'warning');
+                return;
+            }
+            
+            if (isSynchronized) {
+                showTokenStatus('Status: Token Sincronizado com Sucesso. Você tem controle total do bot.', 'success');
+            } else {
+                showTokenStatus('Status: Token gerado mas ainda não sincronizado. Copie e cole o token no Discord com /bypass codigo: [seu_codigo] para sincronizar.', 'warning');
+            }
         }
 
         function showTokenStatus(message, type) {
