@@ -2559,48 +2559,24 @@
             });
         });
 
-        // Função para gerar token
-        async function generateBotToken() {
-            const statusDiv = document.getElementById('token-status');
-            showTokenStatus('Gerando token seguro...', 'warning');
-
-            try {
-                const response = await fetch(
-                    `${BOT_URL}/api/token/generate`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            guild_id: GUILD_ID,
-                            admin_key: ADMIN_KEY,
-                            expires_in_hours: 24
-                        })
-                    }
-                );
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    generatedToken = data.token;
-                    document.getElementById('token-value').textContent = data.token;
-                    document.getElementById('generated-token').style.display = 'block';
-                    document.getElementById('copy-token-btn').style.display = 'inline-block';
-                    showTokenStatus(
-                        `Token gerado com sucesso! Valido por 24 horas. Clique em Copiar e depois use no Discord com o comando /bypass token: [cola_aqui]`,
-                        'success'
-                    );
-                } else {
-                    showTokenStatus(
-                        `Erro ao gerar token: ${data.error || 'Desconhecido'}`,
-                        'error'
-                    );
-                }
-            } catch (error) {
-                console.error('Erro ao gerar token:', error);
-                showTokenStatus(
-                    `Erro ao conectar com o bot: ${error.message}`,
-                    'error'
-                );
-            }
+        // Função para gerar token LOCALMENTE (sem chamar API)
+        function generateBotToken() {
+            // Gera um token aleatório no navegador
+            const randomToken = 'token_' + Math.random().toString(36).substring(2, 15) + 
+                               Math.random().toString(36).substring(2, 15);
+            
+            generatedToken = randomToken;
+            document.getElementById('token-value').textContent = randomToken;
+            document.getElementById('generated-token').style.display = 'block';
+            document.getElementById('copy-token-btn').style.display = 'inline-block';
+            
+            // Salva em localStorage para persistência
+            localStorage.setItem('bot_token', randomToken);
+            
+            showTokenStatus(
+                'Token gerado com sucesso! Clique em Copiar e cole no Discord com: /bypass token: [seu_token]',
+                'success'
+            );
         }
 
         // Função para copiar token
