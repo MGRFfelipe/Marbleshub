@@ -2156,16 +2156,26 @@
                                 <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
                                     Gerar Token Novo
                                 </button>
-                                <button class="token-btn" onclick="toggleTokenVisibility()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #3498db, #2980b9); border-color: #2980b9; display: none;" id="view-token-btn">
+                                <button class="token-btn" onclick="showTokenField()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #3498db, #2980b9); border-color: #2980b9; display: none;" id="view-token-btn">
                                     Ver Token
                                 </button>
                                 <button class="token-btn" onclick="copyTokenToClipboard()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #2ecc71, #27ae60); border-color: #27ae60; display: none;" id="copy-token-btn">
                                     Copiar
                                 </button>
                             </div>
-                            <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 15px; word-break: break-all; display: none;" id="generated-token">
-                                <small style="color: rgba(255, 255, 255, 0.6);">Token (copie e cole no Discord):</small><br>
-                                <code style="color: #00d4ff; font-family: 'Courier New', monospace; font-size: 0.9em;" id="token-value"></code>
+                            <div style="background: rgba(124, 58, 231, 0.1); border: 2px solid rgba(124, 58, 231, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px; word-break: break-all; display: none;" id="token-display-area">
+                                <small style="color: rgba(255, 255, 255, 0.6);">Token (copie e cole no Discord com: /bypass codigo: [seu_codigo]):</small><br>
+                                <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px;">
+                                    <input 
+                                        type="password"
+                                        id="token-value" 
+                                        readonly
+                                        style="flex: 1; padding: 12px 16px; border: 2px solid rgba(0, 212, 255, 0.4); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #00d4ff; font-family: 'Courier New', monospace; font-size: 0.85em;"
+                                    />
+                                    <button onclick="toggleTokenMask()" style="padding: 10px 12px; background: linear-gradient(135deg, #7c3aed, #667eea); border: 2px solid #7c3aed; border-radius: 8px; color: white; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;" title="Mostrar/ocultar token">
+                                        👁️
+                                    </button>
+                                </div>
                             </div>
                             <div class="token-status" id="token-status"></div>
                             <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 10px;">Use o comando no Discord: /bypass token: [cole_o_token_aqui]</small>
@@ -2569,31 +2579,38 @@
                                Math.random().toString(36).substring(2, 15);
             
             generatedToken = randomToken;
-            document.getElementById('token-value').textContent = randomToken;
-            document.getElementById('generated-token').style.display = 'block';
+            document.getElementById('token-value').value = randomToken;
+            document.getElementById('token-display-area').style.display = 'block';
             document.getElementById('view-token-btn').style.display = 'inline-block';
             document.getElementById('copy-token-btn').style.display = 'inline-block';
+            
+            // Token fica MASCARADO por padrão (type="password")
+            document.getElementById('token-value').type = 'password';
             
             // Salva em localStorage para persistência
             localStorage.setItem('bot_token', randomToken);
             
             showTokenStatus(
-                'Token gerado com sucesso! Clique em Ver Token para visualizar ou Copiar para colar no Discord',
+                'Token gerado com sucesso! Clique no olho para visualizar ou Copiar para colar no Discord',
                 'success'
             );
         }
 
-        // Função para mostrar/ocultar token
-        function toggleTokenVisibility() {
-            const generatedTokenDiv = document.getElementById('generated-token');
-            const viewBtn = document.getElementById('view-token-btn');
-            
-            if (generatedTokenDiv.style.display === 'block') {
-                generatedTokenDiv.style.display = 'none';
-                viewBtn.textContent = 'Ver Token';
+        // Função para mostrar o campo do token
+        function showTokenField() {
+            const tokenDisplayArea = document.getElementById('token-display-area');
+            if (tokenDisplayArea.style.display === 'none') {
+                tokenDisplayArea.style.display = 'block';
+            }
+        }
+
+        // Função para mascarar/desmascarar token
+        function toggleTokenMask() {
+            const tokenInput = document.getElementById('token-value');
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';  // Desmascarar
             } else {
-                generatedTokenDiv.style.display = 'block';
-                viewBtn.textContent = 'Ocultar Token';
+                tokenInput.type = 'password';  // Mascarar
             }
         }
 
