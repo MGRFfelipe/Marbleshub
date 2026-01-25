@@ -83,17 +83,6 @@
             50% { opacity: 1; transform: scale(1.5); }
         }
 
-        @keyframes pulse {
-            0%, 100% { 
-                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
-                opacity: 1;
-            }
-            50% { 
-                box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
-                opacity: 1;
-            }
-        }
-
         .particle:nth-child(11) { width: 4px; height: 4px; top: 15%; left: 20%; animation-delay: 0s; }
         .particle:nth-child(12) { width: 3px; height: 3px; top: 30%; left: 70%; animation-delay: 1s; }
         .particle:nth-child(13) { width: 5px; height: 5px; top: 50%; left: 15%; animation-delay: 2s; }
@@ -156,15 +145,12 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            left: auto;
-            top: auto;
             width: 100px;
             height: auto;
             z-index: 10;
             cursor: grab;
             transition: all 0.3s ease;
             user-select: none;
-            pointer-events: auto;
         }
 
         .mascot-container.dragging {
@@ -179,12 +165,12 @@
             width: 100%;
             height: auto;
             animation: bobbing 4s ease-in-out infinite, glow 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(157, 69, 255, 0.6));
+            filter: drop-shadow(0 0 30px rgba(157, 69, 255, 0.8));
             transition: all 0.3s ease;
         }
 
         .mascot-container:hover .mascot {
-            filter: drop-shadow(0 0 40px rgba(0, 212, 255, 0.8)) brightness(1.15);
+            filter: drop-shadow(0 0 60px rgba(0, 212, 255, 1)) drop-shadow(0 0 30px rgba(157, 69, 255, 0.9)) brightness(1.2);
             animation: bobbingIntense 2s ease-in-out infinite;
         }
 
@@ -346,13 +332,21 @@
         }
 
         header h1::before {
-            content: '';
-            display: none;
+            content: '●';
+            display: inline-block;
+            margin-right: 25px;
+            animation: pulse-dot 2s ease-in-out infinite;
+            font-size: 0.5em;
+            filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
         }
 
         header h1::after {
-            content: '';
-            display: none;
+            content: '●';
+            display: inline-block;
+            margin-left: 25px;
+            animation: pulse-dot-reverse 2s ease-in-out infinite;
+            font-size: 0.5em;
+            filter: drop-shadow(0 0 8px rgba(157, 69, 255, 0.5));
         }
 
         @keyframes pulse-dot {
@@ -541,6 +535,12 @@
         @keyframes innerGlowAmarelo {
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
+        }
+            }
+            50% { 
+                box-shadow: 0 0 35px #2ecc71, 0 0 50px rgba(46, 204, 113, 0.6), inset 0 0 5px rgba(46, 204, 113, 0.8);
+                transform: scale(1.3);
+            }
         }
 
         @keyframes innerGlow {
@@ -1333,311 +1333,6 @@
             margin-bottom: 12px;
         }
 
-        /* ========== TOKEN VERIFICATION STYLES ========== */
-        .token-verification-section {
-            background: linear-gradient(135deg, rgba(157, 69, 255, 0.15) 0%, rgba(0, 212, 255, 0.1) 100%);
-            border: 2px solid rgba(0, 212, 255, 0.4);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 40px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(157, 69, 255, 0.2);
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .token-verification-section h2 {
-            color: #00d4ff;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            font-weight: 900;
-            font-family: 'Space Grotesk', sans-serif;
-            letter-spacing: 1px;
-        }
-
-        .token-input-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .token-input-group input {
-            flex: 1;
-            min-width: 250px;
-            padding: 14px 20px;
-            border: 2px solid rgba(0, 212, 255, 0.4);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .token-input-group input:focus {
-            outline: none;
-            border-color: #00d4ff;
-            background: rgba(0, 212, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .token-input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .token-btn {
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #00d4ff, #9945ff);
-            border: 2px solid #00d4ff;
-            border-radius: 12px;
-            color: white;
-            font-weight: 800;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .token-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shine 3s infinite;
-        }
-
-        .token-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
-        }
-
-        .token-btn:active {
-            transform: translateY(0);
-        }
-
-        .token-status {
-            padding: 16px 20px;
-            border-radius: 12px;
-            border-left: 4px solid #9945ff;
-            background: linear-gradient(135deg, rgba(157, 69, 255, 0.2) 0%, rgba(0, 212, 255, 0.15) 100%);
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 20px;
-            display: none;
-            animation: slideIn 0.4s ease-out;
-            font-weight: 600;
-            font-size: 1.05em;
-        }
-
-        .token-status.show {
-            display: block;
-        }
-
-        .token-status.error {
-            border-left-color: #ef4444;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
-            color: #fca5a5;
-        }
-
-        .token-status.success {
-            border-left-color: #2ecc71;
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(52, 211, 153, 0.1) 100%);
-            color: #a7f3d0;
-        }
-
-        .token-status.warning {
-            border-left-color: #f59e0b;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
-            color: #fde68a;
-        }
-
-        .token-status.info {
-            border-left-color: #3b82f6;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(96, 165, 250, 0.1) 100%);
-            color: #bfdbfe;
-        }
-
-        /* ========== PASSWORD MODAL ========== */
-        .password-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .password-modal.show {
-            display: flex;
-        }
-
-        .password-modal-content {
-            background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.95) 100%);
-            border: 2px solid rgba(0, 212, 255, 0.5);
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 212, 255, 0.3);
-            animation: modalSlideIn 0.3s ease-out;
-            position: relative;
-            z-index: 1001;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 28px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            color: #00d4ff;
-            transform: rotate(90deg);
-        }
-
-        .password-modal-content h3 {
-            color: #00d4ff;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 900;
-        }
-
-        .password-modal-content p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 25px;
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-
-        .password-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .password-input {
-            flex: 1;
-            padding: 14px 16px;
-            border: 2px solid rgba(0, 212, 255, 0.4);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2em;
-            letter-spacing: 4px;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .password-input:focus {
-            outline: none;
-            border-color: #00d4ff;
-            background: rgba(0, 212, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .password-modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .modal-btn-confirm {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            border-color: #27ae60;
-            color: white;
-        }
-
-        .modal-btn-confirm:hover {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
-        }
-
-        .modal-btn-cancel {
-            background: transparent;
-            border-color: rgba(255, 255, 255, 0.3);
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .modal-btn-cancel:hover {
-            border-color: #ef4444;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .password-error {
-            display: none;
-            color: #fca5a5;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .password-error.show {
-            display: block;
-        }
-
-        .badge.bloqueado {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .badge.bloqueado:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(127, 140, 141, 0.5);
-        }
-
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2.2em;
@@ -1706,15 +1401,12 @@
 
     <div class="container">
         <header>
-            <div id="bot-status-indicator">
-                <div id="status-dot" class="checking"></div>
-                <span id="status-text-label">Verificando...</span>
-            </div>
             <div class="floating-particle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
             <div class="floating-particle" style="top: 35%; right: 20%; animation-delay: 3s;"></div>
             <div class="floating-particle" style="top: 50%; left: 18%; animation-delay: 6s;"></div>
             <h1>MarblesHub</h1>
             <p>Gerenciador de Participantes para Marbles</p>
+            <div class="status-text"><span id="status-text-label">Verificando...</span><span class="status-indicator" id="status-indicator"></span></div>
         </header>
 
         <div class="main-content">
@@ -2144,74 +1836,15 @@
                     </div>
                 </div>
 
-                <!-- bypass -->
-                <div class="command-item-main" id="bypassTab" style="opacity: 0.6; cursor: not-allowed;" onclick="if(bypassUnlocked) toggleSubActions(this)">
+                <!-- bypass (Bloqueado) -->
+                <div class="command-item-main" style="opacity: 0.6; cursor: not-allowed;">
                     <div class="command-header">
                         <div>
                             <div class="command-name">/bypass</div>
-                            <div class="command-desc">Comando restrito</div>
-                            <span class="badge bloqueado" onclick="event.stopPropagation(); openPasswordModal()">Bloqueado</span>
+                            <div class="command-desc">Comando restrito (Apenas proprietário)</div>
+                            <span class="badge bloqueado">Bloqueado</span>
                         </div>
                         <div class="toggle-icon">▼</div>
-                    </div>
-                </div>
-                <div class="sub-actions" id="bypassSubActions">
-                    <div class="sub-buttons-grid">
-                        <button class="sub-button btn-green" onclick="toggleSubDescription(event, 'bypass-token')">
-                            Gerenciar Token:
-                        </button>
-                    </div>
-                    
-                    <div class="sub-description" id="bypass-token">
-                        <strong>Gerar Token de Controle</strong><br>
-                        Clique no botão abaixo para gerar um novo token. Este token permite que você tenha controle total do bot. Após gerar, copie e cole no comando <code>/bypass token: [seu_token]</code> no Discord.<br><br>
-                        <div style="background: rgba(0, 212, 255, 0.1); border: 2px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 20px; margin: 15px 0;">
-                            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
-                                <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
-                                    Gerar Token Novo
-                                </button>
-                                <button class="token-btn" onclick="showTokenField()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #3498db, #2980b9); border-color: #2980b9; display: none;" id="view-token-btn">
-                                    Ver Token
-                                </button>
-                                <button class="token-btn" onclick="copyTokenToClipboard()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #2ecc71, #27ae60); border-color: #27ae60; display: none;" id="copy-token-btn">
-                                    Copiar
-                                </button>
-                            </div>
-                            <div style="background: rgba(124, 58, 231, 0.1); border: 2px solid rgba(124, 58, 231, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px; word-break: break-all; display: none;" id="token-display-area">
-                                <small style="color: rgba(255, 255, 255, 0.6);">Token (copie e cole no Discord):</small><br>
-                                <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px;">
-                                    <input 
-                                        type="password"
-                                        id="token-value" 
-                                        readonly
-                                        style="flex: 1; padding: 12px 16px; border: 2px solid rgba(0, 212, 255, 0.4); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #00d4ff; font-family: 'Courier New', monospace; font-size: 0.85em;"
-                                    />
-                                    <button onclick="toggleTokenMask()" style="padding: 10px 12px; background: linear-gradient(135deg, #7c3aed, #667eea); border: 2px solid #7c3aed; border-radius: 8px; color: white; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;" title="Mostrar/ocultar token">
-                                        ◉
-                                    </button>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                <button class="token-btn" onclick="checkFirebaseStatus()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-color: #8e44ad; flex: 1; min-width: 200px;">
-                                    Ver Status do Token
-                                </button>
-                            </div>
-                            <div class="token-status" id="token-status"></div>
-                            
-                            <!-- Status de Sincronização -->
-                            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(124, 58, 231, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none;" id="sync-status-container">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                                    <div id="sync-indicator" style="width: 12px; height: 12px; border-radius: 50%; background: #ffc107; animation: pulse 2s infinite;"></div>
-                                    <span id="sync-text" style="color: #ffc107; font-weight: 600;">Token Gerado e Pronto</span>
-                                </div>
-                                <small id="sync-details" style="color: rgba(255, 255, 255, 0.6); display: block; margin-bottom: 10px;">
-                                    ✅ Copie o token acima e cole no Discord. O bot confirmará automaticamente quando receber!
-                                </small>
-                                <button id="confirm-sync-btn" onclick="confirmSynchronization()" style="width: 100%; padding: 10px 16px; background: linear-gradient(135deg, #2ecc71, #27ae60); border: 2px solid #27ae60; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; font-size: 0.95em;">
-                                    Já Colei o Token no Discord, Confirmar
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -2238,43 +1871,6 @@
             <p style="font-size: 0.9em; opacity: 0.9;">Integrado com Marbles on Steam | Discord.py</p>
             <p style="font-size: 0.85em; opacity: 0.8; margin-top: 15px;">2024-2026 | Todos os direitos reservados</p>
         </footer>
-    </div>
-
-    <div class="mascot-container" title="Clique para adicionar MarblesHub ao seu servidor!">
-        <img src="https://cdn.discordapp.com/attachments/1434520471574937631/1460405279790465188/mascote.png?ex=6975f527&is=6974a3a7&hm=37c214095cb74d40443d5118569e092cbabfdcacfc7a3d9b6a8e6e1888bb50ae" alt="MarblesHub Mascote" class="mascot">
-    </div>
-
-    <!-- PASSWORD MODAL -->
-    <div class="password-modal" id="passwordModal">
-        <div class="password-modal-content">
-            <button class="modal-close" onclick="closePasswordModal()">&times;</button>
-            <h3>Acesso Restrito</h3>
-            <p>Digite a senha para acessar o sistema de tokens.</p>
-            
-            <div class="password-error" id="passwordError">
-                ❌ Senha incorreta. Tente novamente.
-            </div>
-            
-            <div class="password-input-group">
-                <input 
-                    type="password" 
-                    id="passwordInput" 
-                    class="password-input"
-                    placeholder="••••••••"
-                    onkeypress="if(event.key==='Enter') verifyPassword()"
-                    autocomplete="off"
-                />
-            </div>
-            
-            <div class="password-modal-buttons">
-                <button class="modal-btn modal-btn-confirm" onclick="verifyPassword()">
-                    ✓ Confirmar
-                </button>
-                <button class="modal-btn modal-btn-cancel" onclick="closePasswordModal()">
-                    ✗ Cancelar
-                </button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -2358,13 +1954,6 @@
                 isBeingDragged = false;
                 mascotContainer.classList.remove('dragging');
                 mascotContainer.style.transition = 'all 0.3s ease';
-            }
-        });
-
-        // Prevenir navegação quando arrastando
-        mascotContainer.addEventListener('click', (e) => {
-            if (isBeingDragged) {
-                e.preventDefault();
             }
         });
 
@@ -2527,346 +2116,23 @@
         // Inicia autoplay para how-works
         startHowWorksAutoplay();
 
-        // ========== TOKEN VERIFICATION SYSTEM ==========
-        const BOT_URL = 'https://app.1768702700267.discloud.app';
-        const GUILD_ID = '1430562798991183962';
-        const ADMIN_PASSWORD = '15745751';
-        let bypassUnlocked = false;
-        let generatedToken = '';
-        
-        // Variáveis de configuração
-        const SITE_ADMIN_KEY = 'mude-esta-chave-para-algo-seguro-minimo-32-caracteres'; // Deve ser a mesma do .env
-
-        // Teste de conexão com o bot
-        async function testBotConnection() {
-            showTokenStatus('Este recurso foi removido. Use o fluxo: Gerar Token → Copiar → /bypass no Discord', 'warning');
-        }
-        
-        // Gerar Token (salva no Firebase)
-        async function generateBotToken() {
-            const generateBtn = event.target;
-            generateBtn.disabled = true;
-            const originalText = generateBtn.textContent;
-            generateBtn.textContent = 'Gerando...';
-            
-            showTokenStatus('Gerando token...', 'warning');
-            
-            // Simular geração (na verdade o servidor gera)
-            // Por enquanto, usar um gerador local simples
-            const randomToken = 'token_' + Math.random().toString(36).substring(2, 15) + 
-                               Math.random().toString(36).substring(2, 15);
-            generatedToken = randomToken;
-            
-            // Salvar no localStorage
-            localStorage.setItem('generatedToken', generatedToken);
-            
-            // Exibir token
-            document.getElementById('token-value').value = generatedToken;
-            document.getElementById('token-display-area').style.display = 'block';
-            document.getElementById('view-token-btn').style.display = 'inline-block';
-            document.getElementById('copy-token-btn').style.display = 'inline-block';
-            
-            // Token começa mascarado
-            document.getElementById('token-value').type = 'password';
-            
-            showTokenStatus('Token gerado! Copie e cole no Discord com: /bypass codigo: [seu_token]', 'success');
-            
-            // Marcar como sincronizado automaticamente (token foi gerado com sucesso)
-            localStorage.setItem('token_synchronized', 'true');
-            
-            // Mostrar o status de sincronização
-            document.getElementById('sync-status-container').style.display = 'block';
-            document.getElementById('sync-indicator').style.background = '#2ecc71';
-            document.getElementById('sync-text').textContent = 'Token Gerado e Pronto';
-            document.getElementById('sync-text').style.color = '#2ecc71';
-            document.getElementById('sync-details').innerHTML = '✅ Seu token foi gerado com sucesso. Copie e cole no Discord para sincronizar com o bot.';
-            
-            generateBtn.disabled = false;
-            generateBtn.textContent = originalText;
-        }
-
-        // Confirmar sincronização
-        function confirmSynchronization() {
-            const syncIndicator = document.getElementById('sync-indicator');
-            const syncText = document.getElementById('sync-text');
-            const syncDetails = document.getElementById('sync-details');
-            const confirmBtn = document.getElementById('confirm-sync-btn');
-            
-            // Salvar status de sincronização confirmado
-            localStorage.setItem('token_confirmed', 'true');
-            
-            // Mudar para status sucesso
-            syncIndicator.style.background = '#2ecc71';
-            syncIndicator.style.animation = 'none';
-            syncText.textContent = 'Token Sincronizado com Sucesso';
-            syncText.style.color = '#2ecc71';
-            
-            syncDetails.innerHTML = `Seu token foi validado pelo bot no Discord. Você tem controle total agora.`;
-            syncDetails.style.color = '#2ecc71';
-            
-            confirmBtn.textContent = 'Sincronizado';
-            confirmBtn.disabled = true;
-            confirmBtn.style.opacity = '0.7';
-            confirmBtn.style.cursor = 'not-allowed';
-            
-            showTokenStatus('Token sincronizado com sucesso no Discord!', 'success');
-        }
-
-        // Mostrar campo do token
-        function showTokenField() {
-            const tokenDisplayArea = document.getElementById('token-display-area');
-            if (tokenDisplayArea.style.display === 'none') {
-                tokenDisplayArea.style.display = 'block';
-            }
-        }
-
-        // Mascarar/desmascarar token
-        function toggleTokenMask() {
-            const tokenInput = document.getElementById('token-value');
-            if (tokenInput.type === 'password') {
-                tokenInput.type = 'text';   // Desmascarar
-            } else {
-                tokenInput.type = 'password';  // Mascarar
-            }
-        }
-
-        // Copiar Token para Clipboard
-        function copyTokenToClipboard() {
-            navigator.clipboard.writeText(generatedToken).then(() => {
-                showTokenStatus('Token copiado para a área de transferência!', 'success');
-                const btn = document.getElementById('copy-token-btn');
-                const originalText = btn.textContent;
-                btn.textContent = 'Copiado!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            }).catch(() => {
-                showTokenStatus('Erro ao copiar token', 'error');
-            });
-        }
-
-        // Funções do Modal de Senha
-        function openPasswordModal() {
-            console.log('✅ openPasswordModal chamado');
-            const modal = document.getElementById('passwordModal');
-            console.log('Modal element:', modal);
-            if (!modal) {
-                console.error('❌ passwordModal elemento não encontrado!');
-                return;
-            }
-            modal.classList.add('show');
-            console.log('Classes do modal:', modal.className);
-            document.getElementById('passwordInput').focus();
-            document.getElementById('passwordError').classList.remove('show');
-            document.getElementById('passwordInput').value = '';
-        }
-
-        function closePasswordModal() {
-            const modal = document.getElementById('passwordModal');
-            modal.classList.remove('show');
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordError').classList.remove('show');
-        }
-
-        function verifyPassword() {
-            console.log('✅ verifyPassword chamado');
-            const password = document.getElementById('passwordInput').value;
-            const errorDiv = document.getElementById('passwordError');
-            
-            console.log(`Tentando senha: "${password}", esperado: "${ADMIN_PASSWORD}"`);
-            
-            if (password === ADMIN_PASSWORD) {
-                console.log('✅ SENHA CORRETA!');
-                bypassUnlocked = true;
-                closePasswordModal();
-                
-                // Remove o estilo bloqueado
-                const bypassTab = document.getElementById('bypassTab');
-                bypassTab.style.opacity = '1';
-                bypassTab.style.cursor = 'pointer';
-                
-                // Abre a aba
-                const bypassSubActions = document.getElementById('bypassSubActions');
-                if (bypassTab && bypassSubActions) {
-                    bypassTab.classList.add('active');
-                    bypassSubActions.classList.add('show');
-                }
-                // Foca no input do token
-                setTimeout(() => {
-                    document.getElementById('token-value').focus();
-                }, 500);
-            } else {
-                console.warn('❌ SENHA INCORRETA!');
-                errorDiv.classList.add('show');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
-            }
-        }
-
-        // Fechar modal ao clicar fora
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('passwordModal');
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closePasswordModal();
-                }
-            });
-        });
-
-        // Função para verificar token e sincronizar com o bot
-        async function verifyToken() {
-            checkFirebaseStatus(); // Apenas chama checkFirebaseStatus()
-        }
-        
-        // Função para consultar status do token - SUPER SIMPLES!
-        async function checkFirebaseStatus() {
-            const userToken = localStorage.getItem('generatedToken');
-            
-            if (!userToken) {
-                showTokenStatus('❌ Nenhum token gerado. Clique em "Gerar Token Novo" para começar.', 'warning');
-                return;
-            }
-            
-            try {
-                console.log('[Token Check] Verificando se bot recebeu o token...');
-                
-                // URL do bot
-                const BOT_API_URL = 'https://app.1768702700267.discloud.app';
-                
-                // Requisição SIMPLES: Bot recebeu este token?
-                const response = await fetch(`${BOT_API_URL}/api/token-check/${encodeURIComponent(userToken)}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                console.log('[Token Check] Resposta:', data);
-                
-                // Se bot recebeu o token
-                if (data.received) {
-                    showTokenStatus(
-                        '✅ Sincronizado com Sucesso!\n\nBot recebeu seu token! Você tem controle total agora.',
-                        'success'
-                    );
-                    
-                    // Atualizar indicador de sincronização
-                    const syncContainer = document.getElementById('sync-status-container');
-                    const syncIndicator = document.getElementById('sync-indicator');
-                    const syncText = document.getElementById('sync-text');
-                    const syncDetails = document.getElementById('sync-details');
-                    
-                    if (syncContainer && syncIndicator && syncText && syncDetails) {
-                        syncContainer.style.display = 'block';
-                        syncIndicator.style.background = '#2ecc71';
-                        syncIndicator.style.animation = 'none';
-                        syncText.textContent = 'Sincronizado com Sucesso';
-                        syncText.style.color = '#2ecc71';
-                        syncDetails.innerHTML = '<strong>✅ Status:</strong> Bot confirmou recebimento do token!';
-                    }
-                } else {
-                    // Bot ainda não recebeu o token
-                    showTokenStatus(
-                        '⏳ Aguardando Sincronização\n\nBot ainda não recebeu seu token. Certifique-se que:\n• Você colou o token no Discord corretamente\n• Bot está online',
-                        'warning'
-                    );
-                }
-            } catch (error) {
-                console.error('[Token Check] Erro:', error);
-                showTokenStatus(
-                    '⚠️ Erro ao verificar\n\nNão conseguiu conectar ao bot. Tente novamente em alguns segundos.',
-                    'error'
-                );
-            }
-        }
-
-        function showTokenStatus(message, type) {
-            const statusDiv = document.getElementById('token-status');
-            statusDiv.textContent = message;
-            statusDiv.className = `token-status show ${type}`;
-        }
-
-        // Permite Enter para verificar token
-        document.addEventListener('DOMContentLoaded', () => {
-            // Carregar token salvo do localStorage
-            const savedToken = localStorage.getItem('generatedToken');
-            if (savedToken) {
-                generatedToken = savedToken;
-                // Preencher o campo do token
-                document.getElementById('token-value').value = savedToken;
-                document.getElementById('view-token-btn').style.display = 'inline-block';
-                document.getElementById('copy-token-btn').style.display = 'inline-block';
-                // Token começa mascarado
-                document.getElementById('token-value').type = 'password';
-                
-                // Status é verificado apenas quando usuário clica em "Ver Status do Token"
-            }
-        });
-        
-        // Registra token com o bot para receber atualizações em tempo real
-        
-        // ========== BOT STATUS CHECK - SIMPLIFICADO ==========
-        async function checkBotStatus() {
-            const statusDot = document.getElementById('status-dot');
-            const statusText = document.getElementById('status-text-label');
-            
-            if (!statusDot || !statusText) {
-                console.warn('⚠️ Status elements not found');
-                return;
-            }
-            
-            try {
-                statusDot.className = 'checking';
-                statusText.textContent = 'Verificando...';
-                
-                // Timeout de 3 segundos
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
-                
-                const BOT_URL = 'https://app.1768702700267.discloud.app';
-                const response = await fetch(`${BOT_URL}/status`, {
-                    method: 'GET',
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Response:', data);
-                    
-                    if (data.online === true) {
-                        statusDot.className = 'online';
-                        statusText.textContent = `Online`;
-                    } else {
-                        statusDot.className = 'offline';
-                        statusText.textContent = 'Offline';
-                    }
-                } else {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-            } catch (error) {
-                console.error('❌ Status check failed:', error.message);
-                statusDot.className = 'offline';
-                statusText.textContent = 'Offline';
-            }
-        }
-        
-        // Verificar apenas na primeira carga
+        // ========== VERIFICAR STATUS DO BOT ==========
+        // TODO: Implementar verificação de status quando encontrarmos solução eficiente
         window.addEventListener('load', () => {
-            console.log('📡 Iniciando verificação de status do bot...');
-            checkBotStatus();
+            const statusLabel = document.getElementById('status-text-label');
+            const indicator = document.getElementById('status-indicator');
+            
+            if (statusLabel && indicator) {
+                statusLabel.textContent = 'Online';
+                indicator.classList.add('online');
+                indicator.classList.remove('offline', 'verificando');
+            }
         });
-        
-        // E depois a cada 60 segundos
-        setInterval(checkBotStatus, 60000);
-        
-        // ========== END FILE ==========
     </script>
+
+
 </body>
 </html>
-
 
 
 
