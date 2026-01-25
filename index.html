@@ -2524,15 +2524,6 @@
         // Inicia autoplay para how-works
         startHowWorksAutoplay();
 
-        // ========== STATUS DO BOT - VERIFICAÇÃO SIMPLES ==========
-        // Apenas mostra "Clique em Ver Status do Token" até o usuário solicitar
-        window.addEventListener('load', () => {
-            const statusLabel = document.getElementById('status-text-label');
-            if (statusLabel) {
-                statusLabel.textContent = 'Clique em "Ver Status do Token"';
-            }
-        });
-
         // ========== TOKEN VERIFICATION SYSTEM ==========
         const BOT_URL = 'https://app.1768702700267.discloud.app';
         const GUILD_ID = '1430562798991183962';
