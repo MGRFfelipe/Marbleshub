@@ -2138,7 +2138,7 @@
                 <div class="sub-actions" id="bypassSubActions">
                     <div class="sub-buttons-grid">
                         <button class="sub-button btn-green" onclick="toggleSubDescription(event, 'bypass-token')">
-                            Cole seu token aqui:
+                            Gerenciar Token:
                         </button>
                     </div>
                     
@@ -2173,7 +2173,7 @@
                             </div>
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                                 <button class="token-btn" onclick="checkFirebaseStatus()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-color: #8e44ad; flex: 1; min-width: 200px;">
-                                    📊 Ver Status do Bot no Firebase
+                                    Ver Status do Bot no Firebase
                                 </button>
                             </div>
                             <div class="token-status" id="token-status"></div>
@@ -2697,25 +2697,6 @@
                 document.getElementById('copy-token-btn').style.display = 'inline-block';
                 // Token começa mascarado
                 document.getElementById('token-value').type = 'password';
-            }
-            
-            const tokenInput = document.getElementById('token-input');
-            if (tokenInput) {
-                tokenInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        verifyToken();
-                    }
-                });
-                
-                // Auto-sincronizar quando um token for colado
-                tokenInput.addEventListener('paste', (e) => {
-                    setTimeout(() => {
-                        if (tokenInput.value.trim().length > 10) {
-                            showTokenStatus('Token detectado! Sincronizando...', 'warning');
-                            setTimeout(() => verifyToken(), 500);
-                        }
-                    }, 100);
-                });
             }
         });
     </script>
