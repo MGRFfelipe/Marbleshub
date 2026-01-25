@@ -2172,17 +2172,8 @@
                                 </div>
                             </div>
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                <input 
-                                    type="text" 
-                                    id="token-input" 
-                                    placeholder="Cole seu token aqui para sincronizar..." 
-                                    style="flex: 1; min-width: 200px; padding: 12px 16px; border: 2px solid rgba(0, 212, 255, 0.4); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: white; font-family: 'Courier New', monospace; font-size: 0.9em; transition: all 0.3s ease;"
-                                />
-                                <button class="token-btn" onclick="verifyToken()" style="padding: 12px 24px; white-space: nowrap;">
-                                    Sincronizar
-                                </button>
-                                <button class="token-btn" onclick="checkFirebaseStatus()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-color: #8e44ad;">
-                                    Ver Status
+                                <button class="token-btn" onclick="checkFirebaseStatus()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-color: #8e44ad; flex: 1; min-width: 200px;">
+                                    📊 Ver Status do Bot no Firebase
                                 </button>
                             </div>
                             <div class="token-status" id="token-status"></div>
@@ -2654,40 +2645,37 @@
 
         // Função para verificar token e sincronizar com o bot
         async function verifyToken() {
-            const tokenInput = document.getElementById('token-input');
-            const statusDiv = document.getElementById('token-status');
-            const token = tokenInput.value.trim();
-
-            if (!token) {
-                showTokenStatus('Por favor, insira um token', 'error');
-                return;
-            }
-
-            showTokenStatus('ℹ️ Cole este token no Discord com: /bypass codigo: [seu_token] para validar!', 'warning');
+            showTokenStatus('ℹ️ Cole este token no Discord com: /bypass codigo: [seu_token]', 'warning');
         }
         
         // Função para consultar status do bot no Firebase
         async function checkFirebaseStatus() {
-            showTokenStatus('Consultando status do bot no Firebase...', 'warning');
+            showTokenStatus('Consultando Firebase...', 'warning');
             
             try {
                 const response = await fetch(`${BOT_URL}/api/bot-status-current`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
                 const data = await response.json();
                 
-                if (response.ok) {
-                    const status = data.online ? '🟢 ONLINE' : '🔴 OFFLINE';
-                    const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('pt-BR') : 'N/A';
-                    
+                if (data.online) {
+                    const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('pt-BR') : 'Agora';
                     showTokenStatus(
-                        `✅ Status do Firebase: ${status} | Bot: ${data.bot_name || 'Unknown'} | Latência: ${data.latency || 0}ms | Atualizado: ${timestamp}`,
+                        `✅ Bot ONLINE | ${data.bot_name || 'Unknown'} | Latência: ${data.latency || 0}ms | Atualizado: ${timestamp}`,
                         'success'
                     );
                 } else {
-                    showTokenStatus(`❌ Erro: ${data.error || 'Desconhecido'}`, 'error');
+                    showTokenStatus(`⚠️ Bot OFFLINE | Próxima atualização em breve...`, 'warning');
                 }
             } catch (error) {
-                console.error('Erro ao consultar Firebase:', error);
-                showTokenStatus(`❌ Erro: ${error.message}`, 'error');
+                console.error('Erro:', error);
+                showTokenStatus(
+                    `❌ Não foi possível consultar o Firebase. Verifique se o bot está online.`,
+                    'error'
+                );
             }
         }
 
