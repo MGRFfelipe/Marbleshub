@@ -2817,8 +2817,8 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
                 
-                // Usar o endpoint que lê do Firebase
-                const response = await fetch(BOT_URL + '/api/bot-status-firebase', {
+                // Usar o endpoint SIMPLES que não depende do Firebase
+                const response = await fetch(BOT_URL + '/status', {
                     method: 'GET',
                     signal: controller.signal
                 });
@@ -2827,24 +2827,27 @@
                 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('📊 Status do Firebase:', data);
+                    console.log('📊 Status do Bot:', data);
                     
-                    // Verificar se está online (status pode ser 'online' ou ter campo 'online')
-                    const isOnline = data.status === 'online' || data.online === true;
+                    // Verificar se está online
+                    const isOnline = data.online === true || data.status === 'online';
                     
                     if (isOnline) {
                         statusDot.className = 'online';
-                        statusText.textContent = 'Online';
+                        statusText.textContent = `Online (${data.latency}ms)`;
+                        console.log('✅ Bot Online detectado');
                     } else {
                         statusDot.className = 'offline';
                         statusText.textContent = 'Offline';
+                        console.log('🔴 Bot Offline detectado');
                     }
                 } else {
+                    console.warn(`⚠️ HTTP ${response.status}`);
                     statusDot.className = 'offline';
                     statusText.textContent = 'Offline';
                 }
             } catch (error) {
-                console.error('❌ Erro ao verificar status:', error);
+                console.error('❌ Erro ao verificar status:', error.message);
                 statusDot.className = 'offline';
                 statusText.textContent = 'Offline';
             }
