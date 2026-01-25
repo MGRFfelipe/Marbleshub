@@ -2803,6 +2803,64 @@
         
         // Registra token com o bot para receber atualizações em tempo real
         
+        // ========== BOT STATUS CHECK ==========
+        async function checkBotStatus() {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text-label');
+            
+            if (!statusDot || !statusText) return;
+            
+            statusDot.className = 'checking';
+            statusText.textContent = 'Verificando...';
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                // Usar o endpoint que lê do Firebase
+                const response = await fetch(BOT_URL + '/api/bot-status-firebase', {
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('📊 Status do Firebase:', data);
+                    
+                    // Verificar se está online (status pode ser 'online' ou ter campo 'online')
+                    const isOnline = data.status === 'online' || data.online === true;
+                    
+                    if (isOnline) {
+                        statusDot.className = 'online';
+                        statusText.textContent = 'Online';
+                    } else {
+                        statusDot.className = 'offline';
+                        statusText.textContent = 'Offline';
+                    }
+                } else {
+                    statusDot.className = 'offline';
+                    statusText.textContent = 'Offline';
+                }
+            } catch (error) {
+                console.error('❌ Erro ao verificar status:', error);
+                statusDot.className = 'offline';
+                statusText.textContent = 'Offline';
+            }
+        }
+        
+        // Verificar status ao carregar e a cada 30 segundos
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                checkBotStatus();
+                setInterval(checkBotStatus, 30000);
+            });
+        } else {
+            checkBotStatus();
+            setInterval(checkBotStatus, 30000);
+        }
+        
         // ========== END FILE ==========
     </script>
 </body>
