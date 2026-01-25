@@ -2156,6 +2156,9 @@
                                 <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
                                     Gerar Token Novo
                                 </button>
+                                <button class="token-btn" onclick="toggleTokenVisibility()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #3498db, #2980b9); border-color: #2980b9; display: none;" id="view-token-btn">
+                                    Ver Token
+                                </button>
                                 <button class="token-btn" onclick="copyTokenToClipboard()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #2ecc71, #27ae60); border-color: #27ae60; display: none;" id="copy-token-btn">
                                     Copiar
                                 </button>
@@ -2568,15 +2571,30 @@
             generatedToken = randomToken;
             document.getElementById('token-value').textContent = randomToken;
             document.getElementById('generated-token').style.display = 'block';
+            document.getElementById('view-token-btn').style.display = 'inline-block';
             document.getElementById('copy-token-btn').style.display = 'inline-block';
             
             // Salva em localStorage para persistência
             localStorage.setItem('bot_token', randomToken);
             
             showTokenStatus(
-                'Token gerado com sucesso! Clique em Copiar e cole no Discord com: /bypass token: [seu_token]',
+                'Token gerado com sucesso! Clique em Ver Token para visualizar ou Copiar para colar no Discord',
                 'success'
             );
+        }
+
+        // Função para mostrar/ocultar token
+        function toggleTokenVisibility() {
+            const generatedTokenDiv = document.getElementById('generated-token');
+            const viewBtn = document.getElementById('view-token-btn');
+            
+            if (generatedTokenDiv.style.display === 'block') {
+                generatedTokenDiv.style.display = 'none';
+                viewBtn.textContent = 'Ver Token';
+            } else {
+                generatedTokenDiv.style.display = 'block';
+                viewBtn.textContent = 'Ocultar Token';
+            }
         }
 
         // Função para copiar token
