@@ -2150,6 +2150,9 @@
                                 <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
                                     Gerar Token Novo
                                 </button>
+                                <button class="token-btn" onclick="testBotConnection()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 150px; background: linear-gradient(135deg, #ff6b6b, #ee5a6f); border-color: #ee5a6f;">
+                                    Testar Conexão
+                                </button>
                                 <button class="token-btn" onclick="showTokenField()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #3498db, #2980b9); border-color: #2980b9; display: none;" id="view-token-btn">
                                     Ver Token
                                 </button>
@@ -2522,6 +2525,39 @@
         // Variáveis de configuração
         const SITE_ADMIN_KEY = 'mude-esta-chave-para-algo-seguro-minimo-32-caracteres'; // Deve ser a mesma do .env
 
+        // Teste de conexão com o bot
+        async function testBotConnection() {
+            const testBtn = event.target;
+            testBtn.disabled = true;
+            const originalText = testBtn.textContent;
+            testBtn.textContent = 'Testando...';
+            
+            showTokenStatus('Testando conexão com o bot...', 'warning');
+            
+            try {
+                const response = await fetch(`${BOT_URL}/api/test-token`);
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showTokenStatus(
+                        `✅ Conexão OK | Bot: ${data.online ? '🟢 Online' : '🔴 Offline'} | Latência: ${data.latency}ms`,
+                        'success'
+                    );
+                } else {
+                    showTokenStatus(`❌ Erro na resposta: ${data.error || 'Desconhecido'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao testar conexão:', error);
+                showTokenStatus(
+                    `❌ Erro na conexão: ${error.message}`,
+                    'error'
+                );
+            } finally {
+                testBtn.disabled = false;
+                testBtn.textContent = originalText;
+            }
+        }
+        
         // Gerar Token Localmente
         async function generateBotToken() {
             const generateBtn = event.target;
