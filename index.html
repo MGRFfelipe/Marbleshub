@@ -2181,6 +2181,9 @@
                                 <button class="token-btn" onclick="verifyToken()" style="padding: 12px 24px; white-space: nowrap;">
                                     Sincronizar
                                 </button>
+                                <button class="token-btn" onclick="checkFirebaseStatus()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-color: #8e44ad;">
+                                    Ver Status
+                                </button>
                             </div>
                             <div class="token-status" id="token-status"></div>
                         </div>
@@ -2661,6 +2664,31 @@
             }
 
             showTokenStatus('ℹ️ Cole este token no Discord com: /bypass codigo: [seu_token] para validar!', 'warning');
+        }
+        
+        // Função para consultar status do bot no Firebase
+        async function checkFirebaseStatus() {
+            showTokenStatus('Consultando status do bot no Firebase...', 'warning');
+            
+            try {
+                const response = await fetch(`${BOT_URL}/api/bot-status-current`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const status = data.online ? '🟢 ONLINE' : '🔴 OFFLINE';
+                    const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('pt-BR') : 'N/A';
+                    
+                    showTokenStatus(
+                        `✅ Status do Firebase: ${status} | Bot: ${data.bot_name || 'Unknown'} | Latência: ${data.latency || 0}ms | Atualizado: ${timestamp}`,
+                        'success'
+                    );
+                } else {
+                    showTokenStatus(`❌ Erro: ${data.error || 'Desconhecido'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao consultar Firebase:', error);
+                showTokenStatus(`❌ Erro: ${error.message}`, 'error');
+            }
         }
 
         function showTokenStatus(message, type) {
