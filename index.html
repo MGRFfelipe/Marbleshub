@@ -2654,7 +2654,7 @@
             generatedToken = randomToken;
             
             // Salvar no localStorage
-            localStorage.setItem('bot_token', generatedToken);
+            localStorage.setItem('generatedToken', generatedToken);
             
             // Exibir token
             document.getElementById('token-value').value = generatedToken;
@@ -2799,7 +2799,7 @@
 
         // Função para verificar token e sincronizar com o bot
         async function verifyToken() {
-            showTokenStatus('ℹ️ Cole este token no Discord com: /bypass codigo: [seu_token]', 'warning');
+            checkFirebaseStatus(); // Apenas chama checkFirebaseStatus()
         }
         
         // Função para consultar status do token
@@ -2807,20 +2807,23 @@
             const userToken = localStorage.getItem('generatedToken');
             
             if (!userToken) {
-                showTokenStatus('Nenhum token gerado. Clique em "Gerar Token Novo" para começar.', 'warning');
+                showTokenStatus('❌ Nenhum token gerado. Clique em "Gerar Token Novo" para começar.', 'warning');
                 return;
             }
             
             try {
+                console.log('[Firebase Check] Verificando token:', userToken.substring(0, 20) + '...');
+                
                 // Ler status do Firebase usando a REST API
-                const firebaseUrl = 'https://firestore.googleapis.com/v1/projects/marbleshub-72d2e/databases/(default)/documents/bot_tokens/' + userToken;
+                const firebaseUrl = 'https://firestore.googleapis.com/v1/projects/marbleshub-72d2e/databases/(default)/documents/bot_tokens/' + encodeURIComponent(userToken);
                 
                 const response = await fetch(firebaseUrl);
                 
                 if (!response.ok) {
-                    // Token ainda não tem dados no Firebase
+                    // Token ainda não tem dados no Firebase (bot não recebeu heartbeat)
+                    console.log('[Firebase Check] Token não encontrado no Firebase (HTTP ' + response.status + ')');
                     showTokenStatus(
-                        '⏳ Aguardando Sincronização - Token gerado, mas ainda não recebeu heartbeat do bot. Certifique-se que o bot está online.',
+                        '⏳ Aguardando Sincronização\n\nToken gerado, mas bot ainda não enviou heartbeat. Certifique-se que:\n• Bot está online\n• Você colou o token no Discord corretamente',
                         'warning'
                     );
                     return;
@@ -2848,28 +2851,31 @@
                 const now = new Date();
                 const timeDiff = (now - lastUpdate) / 1000;
                 
+                console.log('[Firebase Check] Status recebido - Online:', isOnline, 'Latência:', latency, 'Tempo desde update:', Math.round(timeDiff) + 's');
+                
                 if (timeDiff > 40) {
-                    // Status antigo
+                    // Status antigo = offline
                     showTokenStatus(
-                        '🔴 Offline - Última atualização foi há ' + Math.floor(timeDiff) + ' segundos',
+                        '🔴 Offline\n\nÚltima atualização foi há ' + Math.floor(timeDiff) + ' segundos. Bot não está enviando heartbeat.',
                         'warning'
                     );
                 } else if (isOnline) {
                     // Bot online
                     showTokenStatus(
-                        '✅ Sincronizado - Bot online agora! (Latência: ' + latency + 'ms)',
+                        '✅ Sincronizado com Sucesso!\n\nBot online agora! Latência: ' + latency + 'ms',
                         'success'
                     );
                     
-                    // Atualizar indicador de sincronização
+                    // Atualizar indicador de sincronização também
                     const syncContainer = document.getElementById('sync-status-container');
                     const syncIndicator = document.getElementById('sync-indicator');
                     const syncText = document.getElementById('sync-text');
                     const syncDetails = document.getElementById('sync-details');
                     
-                    if (syncContainer) {
+                    if (syncContainer && syncIndicator && syncText && syncDetails) {
                         syncContainer.style.display = 'block';
                         syncIndicator.style.background = '#2ecc71';
+                        syncIndicator.style.animation = 'none';
                         syncText.textContent = 'Sincronizado com Sucesso';
                         syncText.style.color = '#2ecc71';
                         syncDetails.innerHTML = '<strong>✅ Status:</strong> Bot online (' + latency + 'ms) - Token sincronizado!';
@@ -2877,48 +2883,14 @@
                 } else {
                     // Bot offline
                     showTokenStatus(
-                        '🔴 Offline - Bot não está respondendo',
+                        '🔴 Offline\n\nBot recebeu seu token mas está offline agora. Tente novamente em alguns segundos.',
                         'warning'
                     );
                 }
             } catch (error) {
-                console.error('[Firebase Status]', error);
-                
-                // Tentar com API alternativa (fallback)
-                checkBotStatusViaAPI(userToken);
-            }
-        }
-
-        // Fallback: verifica via API interna se Firebase REST falhar
-        async function checkBotStatusViaAPI(userToken) {
-            try {
-                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:5000'
-                    : window.location.origin;
-                
-                const response = await fetch(`${apiUrl}/api/bot/status?token=${encodeURIComponent(userToken)}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Status ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.online) {
-                    showTokenStatus(
-                        '✅ Sincronizado - Bot online! (Latência: ' + data.latency + 'ms)',
-                        'success'
-                    );
-                } else {
-                    showTokenStatus(
-                        '⏳ Aguardando Sincronização - Aguardando heartbeat do bot...',
-                        'warning'
-                    );
-                }
-            } catch (error) {
-                console.warn('[API Fallback]', error);
+                console.error('[Firebase Check] Erro:', error);
                 showTokenStatus(
-                    '⚠️ Erro ao verificar status - Tente novamente',
+                    '⚠️ Erro ao verificar status\n\nTente novamente em alguns segundos.',
                     'error'
                 );
             }
@@ -2933,7 +2905,7 @@
         // Permite Enter para verificar token
         document.addEventListener('DOMContentLoaded', () => {
             // Carregar token salvo do localStorage
-            const savedToken = localStorage.getItem('bot_token');
+            const savedToken = localStorage.getItem('generatedToken');
             if (savedToken) {
                 generatedToken = savedToken;
                 // Preencher o campo do token
@@ -2975,7 +2947,7 @@
         
         // Atualiza o display do status do bot em tempo real
         async function updateBotStatusDisplay() {
-            const token = localStorage.getItem('bot_token');
+            const token = localStorage.getItem('generatedToken');
             if (!token) return;
             
             try {
