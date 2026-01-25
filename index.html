@@ -2144,28 +2144,28 @@
                 <div class="sub-actions" id="bypassSubActions">
                     <div class="sub-buttons-grid">
                         <button class="sub-button btn-green" onclick="toggleSubDescription(event, 'bypass-token')">
-                            🔐 Gerar Token
+                            Gerar Token
                         </button>
                     </div>
                     
                     <div class="sub-description" id="bypass-token">
-                        <strong>Gerar Token para Controle do Bot</strong><br>
-                        Clique no botão abaixo para gerar um token seguro. Depois cole esse token no comando /bypass do bot para dar controle total a você.<br><br>
+                        <strong>Gerar Token de Controle</strong><br>
+                        Clique no botão abaixo para GERAR um novo token. Este token permite que você tenha controle total do bot. Após gerar, copie o token e cole no comando /bypass do bot no Discord.<br><br>
                         <div style="background: rgba(0, 212, 255, 0.1); border: 2px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 20px; margin: 15px 0;">
                             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
                                 <button class="token-btn" onclick="generateBotToken()" style="padding: 12px 24px; white-space: nowrap; flex: 1; min-width: 200px;">
-                                    ✨ Gerar Token Novo
+                                    Gerar Token Novo
                                 </button>
                                 <button class="token-btn" onclick="copyTokenToClipboard()" style="padding: 12px 24px; white-space: nowrap; background: linear-gradient(135deg, #2ecc71, #27ae60); border-color: #27ae60; display: none;" id="copy-token-btn">
-                                    📋 Copiar
+                                    Copiar
                                 </button>
                             </div>
                             <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 15px; word-break: break-all; display: none;" id="generated-token">
-                                <small style="color: rgba(255, 255, 255, 0.6);">Token gerado:</small><br>
+                                <small style="color: rgba(255, 255, 255, 0.6);">Token (copie e cole no Discord):</small><br>
                                 <code style="color: #00d4ff; font-family: 'Courier New', monospace; font-size: 0.9em;" id="token-value"></code>
                             </div>
                             <div class="token-status" id="token-status"></div>
-                            <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 10px;">⚠️ Cole o token no comando <code style="color: #00d4ff;">/bypass token: [cole aqui]</code> do bot</small>
+                            <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 10px;">Use o comando no Discord: /bypass token: [cole_o_token_aqui]</small>
                         </div>
                     </div>
                 </div>
@@ -2562,7 +2562,7 @@
         // Função para gerar token
         async function generateBotToken() {
             const statusDiv = document.getElementById('token-status');
-            showTokenStatus('⏳ Gerando token seguro...', 'warning');
+            showTokenStatus('Gerando token seguro...', 'warning');
 
             try {
                 const response = await fetch(
@@ -2585,19 +2585,19 @@
                     document.getElementById('generated-token').style.display = 'block';
                     document.getElementById('copy-token-btn').style.display = 'inline-block';
                     showTokenStatus(
-                        `✅ Token gerado com sucesso! Válido por 24 horas. Copie e cole no comando /bypass do bot.`,
+                        `Token gerado com sucesso! Valido por 24 horas. Clique em Copiar e depois use no Discord com o comando /bypass token: [cola_aqui]`,
                         'success'
                     );
                 } else {
                     showTokenStatus(
-                        `❌ Erro ao gerar token: ${data.error || 'Desconhecido'}`,
+                        `Erro ao gerar token: ${data.error || 'Desconhecido'}`,
                         'error'
                     );
                 }
             } catch (error) {
                 console.error('Erro ao gerar token:', error);
                 showTokenStatus(
-                    `❌ Erro ao conectar com o bot: ${error.message}`,
+                    `Erro ao conectar com o bot: ${error.message}`,
                     'error'
                 );
             }
@@ -2606,22 +2606,22 @@
         // Função para copiar token
         function copyTokenToClipboard() {
             if (!generatedToken) {
-                showTokenStatus('❌ Nenhum token gerado', 'error');
+                showTokenStatus('Nenhum token gerado', 'error');
                 return;
             }
             
             navigator.clipboard.writeText(generatedToken).then(() => {
-                showTokenStatus('✅ Token copiado para a área de transferência!', 'success');
+                showTokenStatus('Token copiado para a area de transferencia!', 'success');
                 
                 // Mudar texto do botão por 2 segundos
                 const btn = document.getElementById('copy-token-btn');
                 const originalText = btn.textContent;
-                btn.textContent = '✓ Copiado!';
+                btn.textContent = 'Copiado!';
                 setTimeout(() => {
                     btn.textContent = originalText;
                 }, 2000);
             }).catch(() => {
-                showTokenStatus('❌ Erro ao copiar token', 'error');
+                showTokenStatus('Erro ao copiar token', 'error');
             });
         }
 
