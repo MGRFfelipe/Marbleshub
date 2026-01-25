@@ -2803,22 +2803,26 @@
         
         // Registra token com o bot para receber atualizações em tempo real
         
-        // ========== BOT STATUS CHECK ==========
+        // ========== BOT STATUS CHECK - SIMPLIFICADO ==========
         async function checkBotStatus() {
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text-label');
             
-            if (!statusDot || !statusText) return;
-            
-            statusDot.className = 'checking';
-            statusText.textContent = 'Verificando...';
+            if (!statusDot || !statusText) {
+                console.warn('⚠️ Status elements not found');
+                return;
+            }
             
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                statusDot.className = 'checking';
+                statusText.textContent = 'Verificando...';
                 
-                // Usar o endpoint SIMPLES que não depende do Firebase
-                const response = await fetch(BOT_URL + '/status', {
+                // Timeout de 3 segundos
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                
+                const BOT_URL = 'https://app.1768702700267.discloud.app';
+                const response = await fetch(`${BOT_URL}/status`, {
                     method: 'GET',
                     signal: controller.signal
                 });
@@ -2827,42 +2831,33 @@
                 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('📊 Status do Bot:', data);
+                    console.log('✅ Response:', data);
                     
-                    // Verificar se está online
-                    const isOnline = data.online === true || data.status === 'online';
-                    
-                    if (isOnline) {
+                    if (data.online === true) {
                         statusDot.className = 'online';
-                        statusText.textContent = `Online (${data.latency}ms)`;
-                        console.log('✅ Bot Online detectado');
+                        statusText.textContent = `Online`;
                     } else {
                         statusDot.className = 'offline';
                         statusText.textContent = 'Offline';
-                        console.log('🔴 Bot Offline detectado');
                     }
                 } else {
-                    console.warn(`⚠️ HTTP ${response.status}`);
-                    statusDot.className = 'offline';
-                    statusText.textContent = 'Offline';
+                    throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
-                console.error('❌ Erro ao verificar status:', error.message);
+                console.error('❌ Status check failed:', error.message);
                 statusDot.className = 'offline';
                 statusText.textContent = 'Offline';
             }
         }
         
-        // Verificar status ao carregar e a cada 30 segundos
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                checkBotStatus();
-                setInterval(checkBotStatus, 30000);
-            });
-        } else {
+        // Verificar apenas na primeira carga
+        window.addEventListener('load', () => {
+            console.log('📡 Iniciando verificação de status do bot...');
             checkBotStatus();
-            setInterval(checkBotStatus, 30000);
-        }
+        });
+        
+        // E depois a cada 60 segundos
+        setInterval(checkBotStatus, 60000);
         
         // ========== END FILE ==========
     </script>
