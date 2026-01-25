@@ -2648,8 +2648,12 @@
             const savedToken = localStorage.getItem('bot_token');
             if (savedToken) {
                 generatedToken = savedToken;
+                // Preencher o campo do token
+                document.getElementById('token-value').value = savedToken;
                 document.getElementById('view-token-btn').style.display = 'inline-block';
                 document.getElementById('copy-token-btn').style.display = 'inline-block';
+                // Token começa mascarado
+                document.getElementById('token-value').type = 'password';
             }
         });
     </script>
