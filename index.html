@@ -2653,8 +2653,15 @@
 
         // Funções do Modal de Senha
         function openPasswordModal() {
+            console.log('✅ openPasswordModal chamado');
             const modal = document.getElementById('passwordModal');
+            console.log('Modal element:', modal);
+            if (!modal) {
+                console.error('❌ passwordModal elemento não encontrado!');
+                return;
+            }
             modal.classList.add('show');
+            console.log('Classes do modal:', modal.className);
             document.getElementById('passwordInput').focus();
             document.getElementById('passwordError').classList.remove('show');
             document.getElementById('passwordInput').value = '';
@@ -2668,10 +2675,14 @@
         }
 
         function verifyPassword() {
+            console.log('✅ verifyPassword chamado');
             const password = document.getElementById('passwordInput').value;
             const errorDiv = document.getElementById('passwordError');
             
+            console.log(`Tentando senha: "${password}", esperado: "${ADMIN_PASSWORD}"`);
+            
             if (password === ADMIN_PASSWORD) {
+                console.log('✅ SENHA CORRETA!');
                 bypassUnlocked = true;
                 closePasswordModal();
                 
@@ -2691,6 +2702,7 @@
                     document.getElementById('token-input').focus();
                 }, 500);
             } else {
+                console.warn('❌ SENHA INCORRETA!');
                 errorDiv.classList.add('show');
                 document.getElementById('passwordInput').value = '';
                 document.getElementById('passwordInput').focus();
