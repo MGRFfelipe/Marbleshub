@@ -2199,13 +2199,13 @@
                             <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(124, 58, 231, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none;" id="sync-status-container">
                                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                                     <div id="sync-indicator" style="width: 12px; height: 12px; border-radius: 50%; background: #ffc107; animation: pulse 2s infinite;"></div>
-                                    <span id="sync-text" style="color: #ffc107; font-weight: 600;">Aguardando Sincronização no Discord</span>
+                                    <span id="sync-text" style="color: #ffc107; font-weight: 600;">Token Gerado e Pronto</span>
                                 </div>
                                 <small id="sync-details" style="color: rgba(255, 255, 255, 0.6); display: block; margin-bottom: 10px;">
-                                    Você colou o token no Discord? Clique no botão abaixo para confirmar que foi sincronizado com sucesso!
+                                    Próximo passo: Copie o token acima e cola no Discord com <code>/bypass codigo: 64532147</code>. Após receber a confirmação do bot, clique no botão abaixo.
                                 </small>
                                 <button id="confirm-sync-btn" onclick="confirmSynchronization()" style="width: 100%; padding: 10px 16px; background: linear-gradient(135deg, #2ecc71, #27ae60); border: 2px solid #27ae60; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; font-size: 0.95em;">
-                                    Confirmar Sincronização
+                                    Já Colei o Token no Discord, Confirmar
                                 </button>
                             </div>
                         </div>
@@ -2719,7 +2719,6 @@
         // Função para consultar status do token
         async function checkFirebaseStatus() {
             const hasToken = localStorage.getItem('bot_token') !== null;
-            const isSynchronized = localStorage.getItem('token_synchronized') === 'true';
             const isConfirmed = localStorage.getItem('token_confirmed') === 'true';
             
             if (!hasToken) {
@@ -2729,10 +2728,8 @@
             
             if (isConfirmed) {
                 showTokenStatus('Status: Token Sincronizado e Confirmado com Sucesso. Você tem controle total do bot.', 'success');
-            } else if (isSynchronized) {
-                showTokenStatus('Status: Token Gerado e Pronto. Copie e cole no Discord com /bypass codigo: 64532147 para ativar o controle.', 'info');
             } else {
-                showTokenStatus('Status: Token gerado mas ainda não foi colado no Discord. Faça isso agora!', 'warning');
+                showTokenStatus('Status: Token gerado. Próximo passo: Copie e cole no Discord com /bypass codigo: 64532147 e clique em "Já Colei o Token no Discord, Confirmar".', 'info');
             }
         }
 
