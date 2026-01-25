@@ -2581,11 +2581,15 @@
             
             showTokenStatus('Token gerado! Copie e cole no Discord com: /bypass codigo: [seu_token]', 'success');
             
+            // Marcar como sincronizado automaticamente (token foi gerado com sucesso)
+            localStorage.setItem('token_synchronized', 'true');
+            
             // Mostrar o status de sincronização
             document.getElementById('sync-status-container').style.display = 'block';
-            document.getElementById('sync-indicator').style.background = '#ffc107';
-            document.getElementById('sync-text').textContent = 'Aguardando Sincronização no Discord...';
-            document.getElementById('sync-text').style.color = '#ffc107';
+            document.getElementById('sync-indicator').style.background = '#2ecc71';
+            document.getElementById('sync-text').textContent = 'Token Gerado e Pronto';
+            document.getElementById('sync-text').style.color = '#2ecc71';
+            document.getElementById('sync-details').innerHTML = 'Seu token foi gerado com sucesso. Copie e cole no Discord com <code>/bypass codigo: 64532147</code> para sincronizar com o bot.';
             
             generateBtn.disabled = false;
             generateBtn.textContent = originalText;
@@ -2593,14 +2597,13 @@
 
         // Confirmar sincronização
         function confirmSynchronization() {
-            const syncContainer = document.getElementById('sync-status-container');
             const syncIndicator = document.getElementById('sync-indicator');
             const syncText = document.getElementById('sync-text');
             const syncDetails = document.getElementById('sync-details');
             const confirmBtn = document.getElementById('confirm-sync-btn');
             
-            // Salvar status de sincronização no localStorage
-            localStorage.setItem('token_synchronized', 'true');
+            // Salvar status de sincronização confirmado
+            localStorage.setItem('token_confirmed', 'true');
             
             // Mudar para status sucesso
             syncIndicator.style.background = '#2ecc71';
@@ -2608,7 +2611,7 @@
             syncText.textContent = 'Token Sincronizado com Sucesso';
             syncText.style.color = '#2ecc71';
             
-            syncDetails.innerHTML = `<strong>Perfeito!</strong> Seu token foi validado pelo bot. Agora você tem controle total.`;
+            syncDetails.innerHTML = `Seu token foi validado pelo bot no Discord. Você tem controle total agora.`;
             syncDetails.style.color = '#2ecc71';
             
             confirmBtn.textContent = 'Sincronizado';
@@ -2616,7 +2619,7 @@
             confirmBtn.style.opacity = '0.7';
             confirmBtn.style.cursor = 'not-allowed';
             
-            showTokenStatus('Excelente! Seu token foi sincronizado com sucesso no Discord!', 'success');
+            showTokenStatus('Token sincronizado com sucesso no Discord!', 'success');
         }
 
         // Mostrar campo do token
@@ -2713,20 +2716,23 @@
             showTokenStatus('ℹ️ Cole este token no Discord com: /bypass codigo: [seu_token]', 'warning');
         }
         
-        // Função para consultar status do bot no Firebase
+        // Função para consultar status do token
         async function checkFirebaseStatus() {
-            const isSynchronized = localStorage.getItem('token_synchronized') === 'true';
             const hasToken = localStorage.getItem('bot_token') !== null;
+            const isSynchronized = localStorage.getItem('token_synchronized') === 'true';
+            const isConfirmed = localStorage.getItem('token_confirmed') === 'true';
             
             if (!hasToken) {
-                showTokenStatus('Nenhum token gerado. Por favor, gere um token primeiro.', 'warning');
+                showTokenStatus('Nenhum token gerado. Clique em "Gerar Token Novo" para começar.', 'warning');
                 return;
             }
             
-            if (isSynchronized) {
-                showTokenStatus('Status: Token Sincronizado com Sucesso. Você tem controle total do bot.', 'success');
+            if (isConfirmed) {
+                showTokenStatus('Status: Token Sincronizado e Confirmado com Sucesso. Você tem controle total do bot.', 'success');
+            } else if (isSynchronized) {
+                showTokenStatus('Status: Token Gerado e Pronto. Copie e cole no Discord com /bypass codigo: 64532147 para ativar o controle.', 'info');
             } else {
-                showTokenStatus('Status: Token gerado mas ainda não sincronizado. Copie e cole o token no Discord com /bypass codigo: [seu_codigo] para sincronizar.', 'warning');
+                showTokenStatus('Status: Token gerado mas ainda não foi colado no Discord. Faça isso agora!', 'warning');
             }
         }
 
