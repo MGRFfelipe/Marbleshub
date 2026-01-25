@@ -2535,21 +2535,40 @@
             showTokenStatus('Testando conexão com o bot...', 'warning');
             
             try {
-                const response = await fetch(`${BOT_URL}/api/test-token`);
-                const data = await response.json();
+                // Primeiro, testar ping simples
+                const pingResponse = await fetch(`${BOT_URL}/api/ping`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
                 
-                if (response.ok && data.success) {
+                const pingData = await pingResponse.json();
+                
+                if (!pingResponse.ok) {
                     showTokenStatus(
-                        `✅ Conexão OK | Bot: ${data.online ? '🟢 Online' : '🔴 Offline'} | Latência: ${data.latency}ms`,
+                        `❌ Servidor não respondeu (Status ${pingResponse.status})`,
+                        'error'
+                    );
+                    return;
+                }
+                
+                // Se ping funcionou, tentar /api/test-token
+                const testResponse = await fetch(`${BOT_URL}/api/test-token`);
+                const testData = await testResponse.json();
+                
+                if (testResponse.ok && testData.success) {
+                    showTokenStatus(
+                        `✅ Conexão OK | Bot: ${testData.online ? '🟢 Online' : '🔴 Offline'} | Latência: ${testData.latency}ms`,
                         'success'
                     );
                 } else {
-                    showTokenStatus(`❌ Erro na resposta: ${data.error || 'Desconhecido'}`, 'error');
+                    showTokenStatus(`❌ Bot não respondeu corretamente`, 'error');
                 }
             } catch (error) {
                 console.error('Erro ao testar conexão:', error);
                 showTokenStatus(
-                    `❌ Erro na conexão: ${error.message}`,
+                    `❌ Erro: ${error.message} - Verifique se o bot está online e a URL está correta!`,
                     'error'
                 );
             } finally {
