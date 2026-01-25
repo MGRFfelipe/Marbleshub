@@ -1706,12 +1706,15 @@
 
     <div class="container">
         <header>
+            <div id="bot-status-indicator">
+                <div id="status-dot" class="checking"></div>
+                <span id="status-text-label">Verificando...</span>
+            </div>
             <div class="floating-particle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
             <div class="floating-particle" style="top: 35%; right: 20%; animation-delay: 3s;"></div>
             <div class="floating-particle" style="top: 50%; left: 18%; animation-delay: 6s;"></div>
             <h1>MarblesHub</h1>
             <p>Gerenciador de Participantes para Marbles</p>
-            <div class="status-text"><span id="status-text-label">Verificando...</span><span class="status-indicator" id="status-indicator"></span></div>
         </header>
 
         <div class="main-content">
@@ -2690,7 +2693,7 @@
                 }
                 // Foca no input do token
                 setTimeout(() => {
-                    document.getElementById('token-input').focus();
+                    document.getElementById('token-value').focus();
                 }, 500);
             } else {
                 console.warn('❌ SENHA INCORRETA!');
