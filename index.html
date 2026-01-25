@@ -145,6 +145,8 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
+            left: auto;
+            top: auto;
             width: 100px;
             height: auto;
             z-index: 10;
@@ -2308,6 +2310,13 @@
                 isBeingDragged = false;
                 mascotContainer.classList.remove('dragging');
                 mascotContainer.style.transition = 'all 0.3s ease';
+            }
+        });
+
+        // Prevenir navegação quando arrastando
+        mascotContainer.addEventListener('click', (e) => {
+            if (isBeingDragged) {
+                e.preventDefault();
             }
         });
 
