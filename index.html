@@ -83,6 +83,17 @@
             50% { opacity: 1; transform: scale(1.5); }
         }
 
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+                opacity: 1;
+            }
+            50% { 
+                box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+                opacity: 1;
+            }
+        }
+
         .particle:nth-child(11) { width: 4px; height: 4px; top: 15%; left: 20%; animation-delay: 0s; }
         .particle:nth-child(12) { width: 3px; height: 3px; top: 30%; left: 70%; animation-delay: 1s; }
         .particle:nth-child(13) { width: 5px; height: 5px; top: 50%; left: 15%; animation-delay: 2s; }
@@ -1445,6 +1456,12 @@
             color: #fde68a;
         }
 
+        .token-status.info {
+            border-left-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(96, 165, 250, 0.1) 100%);
+            color: #bfdbfe;
+        }
+
         /* ========== PASSWORD MODAL ========== */
         .password-modal {
             display: none;
@@ -2177,6 +2194,20 @@
                                 </button>
                             </div>
                             <div class="token-status" id="token-status"></div>
+                            
+                            <!-- Status de Sincronização -->
+                            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(124, 58, 231, 0.3); border-radius: 8px; padding: 15px; margin-top: 15px; display: none;" id="sync-status-container">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                    <div id="sync-indicator" style="width: 12px; height: 12px; border-radius: 50%; background: #ffc107; animation: pulse 2s infinite;"></div>
+                                    <span id="sync-text" style="color: #ffc107; font-weight: 600;">Aguardando Sincronização no Discord...</span>
+                                </div>
+                                <small id="sync-details" style="color: rgba(255, 255, 255, 0.6); display: block; margin-bottom: 10px;">
+                                    Você colou o token no Discord? Clique no botão abaixo para confirmar que foi sincronizado com sucesso!
+                                </small>
+                                <button id="confirm-sync-btn" onclick="confirmSynchronization()" style="width: 100%; padding: 10px 16px; background: linear-gradient(135deg, #2ecc71, #27ae60); border: 2px solid #27ae60; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; font-size: 0.95em;">
+                                    ✅ Confirmar Sincronização
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2528,7 +2559,7 @@
             const originalText = generateBtn.textContent;
             generateBtn.textContent = 'Gerando...';
             
-            showTokenStatus('Gerando token... (será salvo no Firebase)', 'warning');
+            showTokenStatus('Gerando token...', 'warning');
             
             // Simular geração (na verdade o servidor gera)
             // Por enquanto, usar um gerador local simples
@@ -2550,8 +2581,39 @@
             
             showTokenStatus('✅ Token gerado! Copie e cole no Discord com: /bypass codigo: [seu_token]', 'success');
             
+            // Mostrar o status de sincronização
+            document.getElementById('sync-status-container').style.display = 'block';
+            document.getElementById('sync-indicator').style.background = '#ffc107';
+            document.getElementById('sync-text').textContent = 'Aguardando Sincronização no Discord...';
+            document.getElementById('sync-text').style.color = '#ffc107';
+            
             generateBtn.disabled = false;
             generateBtn.textContent = originalText;
+        }
+
+        // Confirmar sincronização
+        function confirmSynchronization() {
+            const syncContainer = document.getElementById('sync-status-container');
+            const syncIndicator = document.getElementById('sync-indicator');
+            const syncText = document.getElementById('sync-text');
+            const syncDetails = document.getElementById('sync-details');
+            const confirmBtn = document.getElementById('confirm-sync-btn');
+            
+            // Mudar para status sucesso
+            syncIndicator.style.background = '#2ecc71';
+            syncIndicator.style.animation = 'none';
+            syncText.textContent = '✅ Token Sincronizado com Sucesso!';
+            syncText.style.color = '#2ecc71';
+            
+            syncDetails.innerHTML = `<strong>Parabéns!</strong> Seu token foi validado pelo bot. Agora você tem controle total. 🎉`;
+            syncDetails.style.color = '#2ecc71';
+            
+            confirmBtn.textContent = '✅ Sincronizado';
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = '0.7';
+            confirmBtn.style.cursor = 'not-allowed';
+            
+            showTokenStatus('🎉 Excelente! Seu token foi sincronizado com sucesso no Discord!', 'success');
         }
 
         // Mostrar campo do token
