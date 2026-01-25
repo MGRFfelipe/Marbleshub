@@ -2650,33 +2650,10 @@
         
         // Função para consultar status do bot no Firebase
         async function checkFirebaseStatus() {
-            showTokenStatus('Consultando Firebase...', 'warning');
-            
-            try {
-                const response = await fetch(`${BOT_URL}/api/bot-status-current`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.online) {
-                    const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('pt-BR') : 'Agora';
-                    showTokenStatus(
-                        `✅ Bot ONLINE | ${data.bot_name || 'Unknown'} | Latência: ${data.latency || 0}ms | Atualizado: ${timestamp}`,
-                        'success'
-                    );
-                } else {
-                    showTokenStatus(`⚠️ Bot OFFLINE | Próxima atualização em breve...`, 'warning');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                showTokenStatus(
-                    `❌ Não foi possível consultar o Firebase. Verifique se o bot está online.`,
-                    'error'
-                );
-            }
+            showTokenStatus(
+                '📊 Status do Bot: Verifique em tempo real gerando um token e colando no Discord com /bypass. O bot retornará seu status (Online/Offline, Latência).',
+                'info'
+            );
         }
 
         function showTokenStatus(message, type) {
